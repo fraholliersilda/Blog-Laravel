@@ -28,6 +28,13 @@
                     </a>
                 </li>
 
+                <li class="nav-item">
+                    <a href="{{route('alluser')}}" class="nav-link">
+                        <i class="nav-icon bi bi-circle"></i>
+                        <p>All User</p>
+                    </a>
+                </li>
+
                 {{-- @if (auth()->user()->role->name === 'admin')
                 <li class="nav-item">
                     <a href="#" class="nav-link">

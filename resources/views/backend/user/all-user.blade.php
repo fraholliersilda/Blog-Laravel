@@ -31,13 +31,13 @@
                                             <td>{{ $key + 1 }}</td>
                                             <td>{{ $row->name }}</td>
                                             <td>{{ $row->email }}</td>
-                                            <td>{{ $row->role_id == 1 ? 'Admin' : ($row->role_id == 2 ? 'User' : 'Unknown') }}
+                                            <td>{{ $row->role_id == 1 ? 'admin' : ($row->role_id == 2 ? 'user' : 'Unknown') }}
                                             </td>
                                             <td>
-                                                <a href="{{ route('editUser', ['id' => $row->id]) }}"
+                                                {{-- <a href="{{ route('editUser', ['id' => $row->id]) }}"
                                                     class="btn btn-success btn-sm">Edit</a>
                                                 <a href="{{ route('deleteUser', ['id' => $row->id]) }}"
-                                                    class="btn btn-danger btn-sm">Delete</a>
+                                                    class="btn btn-danger btn-sm">Delete</a> --}}
                                             </td>
                                         </tr>
                                     @endforeach
