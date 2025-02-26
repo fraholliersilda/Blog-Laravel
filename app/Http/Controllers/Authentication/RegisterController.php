@@ -25,7 +25,7 @@ class RegisterController extends Controller
     public function register(RegisterRequest $request)
     {
         $credentials = $request->validated();
-        $role = Role::where('role', 'User')->first();
+        $role = Role::where('name', 'user')->first();
         if (!$role) {
             return back()->withErrors(['role' => 'The default User role is missing. Contact the admin.']);
         }

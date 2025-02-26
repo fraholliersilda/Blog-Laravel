@@ -23,15 +23,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
 {
-    Gate::define('update-post', function (User $user, Post $post) {
-        $media = $post->media()->where('user_id', $user->id)->first();
-        return $media || $user->isAdmin();
-    });
-
-    Gate::define('delete-post', function (User $user, Post $post) {
-        $media = $post->media()->where('user_id', $user->id)->first();
-        return $media || $user->isAdmin();
-    });
+    
 }
 
 }

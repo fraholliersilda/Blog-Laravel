@@ -63,5 +63,6 @@
             @method('DELETE')
             <button type="submit" class="btn btn-danger">Delete Profile</button>
         </form>
+
     </div>
 @endsection

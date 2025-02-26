@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ProfileRequest;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\UpdatePasswordRequest;
+use App\Mail\ProfileDeletedMail;
+use Illuminate\Support\Facades\Mail;
 
 class ProfileController extends Controller
 {
@@ -39,13 +41,11 @@ class ProfileController extends Controller
     {
         $user = Auth::user();
 
-        $user->media()->delete();
-
-        $user->posts()->delete();
-
-        $user->delete();
-
         Auth::logout();
+
+        $deleted = $user->forceDelete();
+
+        Mail::to($user->email)->send(new ProfileDeletedMail($user));
 
         return redirect()->route('login')->with('success', 'Your profile has been deleted.');
     }

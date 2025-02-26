@@ -1,4 +1,5 @@
 <!doctype html>
+<!doctype html>
 <html lang="en">
 
 <head>
@@ -57,10 +58,6 @@
                                 <button type="submit" class="btn btn-primary">Reset Password</button>
                             </div>
                         </form>
-
-                        <div class="text-center mt-3">
-                            <p><a href="{{ route('login') }}">Back to Login</a></p>
-                        </div>
                     </div>
                 </div>
             </div>

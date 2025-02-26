@@ -34,9 +34,13 @@
                                             <td>{{ $row->role_id == 1 ? 'Admin' : ($row->role_id == 2 ? 'User' : 'Unknown') }}
                                             </td>
                                             <td>
-                                                <a href="{{ route('editUser', ['id' => $row->id]) }}"
+                                                <a href="
+                                                {{-- {{ route('editUser', ['id' => $row->id]) }} --}}
+                                                 "
                                                     class="btn btn-success btn-sm">Edit</a>
-                                                <a href="{{ route('deleteUser', ['id' => $row->id]) }}"
+                                                <a href="
+                                                {{-- {{ route('deleteUser', ['id' => $row->id]) }} --}}
+                                                 "
                                                     class="btn btn-danger btn-sm">Delete</a>
                                             </td>
                                         </tr>

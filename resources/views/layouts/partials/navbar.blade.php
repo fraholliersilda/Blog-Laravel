@@ -10,7 +10,11 @@
                     </a>
                 @endif
             </li>
-            <li class="nav-item d-none d-md-block"><a href="{{ route('home') }}" class="nav-link">Home</a></li>
+            @if(auth()->user()->hasRole('admin'))
+            <li class="nav-item d-none d-md-block"><a href="{{ route('admin.home') }}" class="nav-link">Admin Dashboard</a></li>
+            @elseif(auth()->user()->hasRole('user'))
+            <li class="nav-item d-none d-md-block"><a href="{{ route('user.home') }}" class="nav-link">Dashboard</a></li>
+            @endif
             {{-- @if (auth()->user()->role->name === 'user')
                 <li class="nav-item d-none d-md-block">
                     <a href="

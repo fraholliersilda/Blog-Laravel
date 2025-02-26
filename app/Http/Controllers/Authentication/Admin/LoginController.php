@@ -19,7 +19,7 @@ class LoginController extends Controller
     {
 
         if (Auth::guard('admin')->check()) {
-            return redirect()->route('admin.dashboard');
+            return redirect()->route('admin.home');
         }
         return view("auth.admin.login");
     }
@@ -39,7 +39,7 @@ class LoginController extends Controller
 
             $request->session()->regenerate();
 
-            return redirect()->intended(route('home'))
+            return redirect()->intended(route('admin.home'))
                 ->with('success', 'Welcome back, ' . $user->name);
         }
 

@@ -15,14 +15,23 @@ class HomeController extends Controller
     {
         $this->middleware('auth');
     }
-
     /**
-     * Show the application dashboard.
+     * Show the admin dashboard.
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index()
+    public function adminDashboard()
     {
-        return view('layouts.dashboard');
+        return view('layouts.admin_dashboard'); // Your custom admin view
+    }
+
+    /**
+     * Show the user dashboard.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function userDashboard()
+    {
+        return view('layouts.user_dashboard'); // Your custom user view
     }
 }

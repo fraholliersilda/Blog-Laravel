@@ -40,7 +40,7 @@ class LoginController extends Controller
 
             $request->session()->regenerate();
 
-            return redirect()->intended(route('home'))
+            return redirect()->intended(route('user.home'))
                 ->with('success', 'Welcome back, ' . Auth::user()->name);
         }
 
