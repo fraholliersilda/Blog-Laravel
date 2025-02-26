@@ -3,15 +3,7 @@
     <div class="container-fluid">
         <!--begin::Start Navbar Links-->
         <ul class="navbar-nav">
-            <li class="nav-item">
-                @if (auth()->user()->role->role == 'admin')
-                    <a class="nav-link" data-lte-toggle="sidebar" href="#" role="button">
-                        <i class="bi bi-list"></i>
-                    </a>
-                @endif
-            </li>
-            <li class="nav-item d-none d-md-block"><a href="{{ route('admin.home') }}" class="nav-link">Admin
-                    Dashboard</a></li>
+            <li class="nav-item d-none d-md-block"><a href="{{ route('user.home') }}" class="nav-link">Dashboard</a></li>
             {{-- @if (auth()->user()->role->name === 'user')
                 <li class="nav-item d-none d-md-block">
                     <a href="
@@ -44,9 +36,11 @@
                     <span class="d-none d-md-inline">{{ auth()->user()->name }} </span>
                 </a>
                 <ul class="dropdown-menu dropdown-menu dropdown-menu-end">
-                    <!--begin::Menu Body-->
+
                     <li class="user-body">
+
                         <div class="text-center">{{ auth()->user()->name }}</div>
+
                     </li>
                     <!--end::Menu Body-->
                     <!--begin::Menu Footer-->

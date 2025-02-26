@@ -4,7 +4,7 @@
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>AdminLTE 4 | Register</title>
+    <title>Register</title>
     <!--begin::Primary Meta Tags-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="title" content="AdminLTE 4 | Register Page v2" />
@@ -34,13 +34,12 @@
 <!--begin::Body-->
 
 <body class="register-page bg-body-secondary">
-    <div class="register-box">
+    <div class="register-box" style="width: 600px">
         <!-- /.register-logo -->
         <div class="card card-outline card-primary">
             <div class="card-header">
-                <a href="#" class="link-dark text-center link-offset-2 link-opacity-100 link-opacity-50-hover">
-                    <h1 class="mb-0"><b>Admin</b>LTE</h1>
-                </a>
+                <h1 class="mb-0 text-center"><b>Register</b></h1>
+
             </div>
             <div class="card-body register-card-body">
                 <p class="register-box-msg">Register a new membership</p>

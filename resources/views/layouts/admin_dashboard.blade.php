@@ -27,7 +27,8 @@
                         <div class="card p-3 shadow-sm">
                             <p class="mb-2"><span>Want to share your review the users? </span>
                                 <br><br>
-                                <a href="{{ route('alluser') }}" class="btn btn-success btn-lg"><i class="bi bi-pencil-square"></i>Review Users</a>
+                                <a href="{{ route('alluser') }}" class="btn btn-success btn-lg"><i
+                                        class="bi bi-pencil-square"></i>Review Users</a>
                             </p>
                         </div>
                     </div>

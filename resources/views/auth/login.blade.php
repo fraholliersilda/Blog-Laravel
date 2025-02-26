@@ -33,8 +33,8 @@
 <!--end::Head-->
 <!--begin::Body-->
 
-<body class="login-page bg-body-secondary">
-    <div class="login-box">
+<body class="login-page bg-body-secondary ">
+    <div class="login-box" style="width: 600px;">
         <div class="card card-outline card-primary">
 
             <div class="card-header">

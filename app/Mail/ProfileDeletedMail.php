@@ -40,7 +40,7 @@ class ProfileDeletedMail extends Mailable
     {
         return new Content(
             view: 'emails.profile_deleted',
-            with:[
+            with: [
                 'userName' => $this->user->name,
             ]
         );
