@@ -14,7 +14,7 @@
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
-                            <table id="" class="table table-bordered table-striped">
+                            <table id="" class="table table-bordered table-striped mb-4" >
                                 <thead>
                                     <tr>
                                         <th>Serial</th>
@@ -57,6 +57,7 @@
                                     </tr>
                                 </tfoot>
                             </table>
+                            {{ $all->links() }}
                         </div>
                         <!-- /.card-body -->
                     </div>

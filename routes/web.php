@@ -53,6 +53,7 @@ Route::middleware(['auth', 'role:admin|user'])->group(function () {
     Route::get('profile', [ProfileController::class, 'show'])->name('profile.show');
     Route::post('profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::post('profile/password', [ProfileController::class, 'updatePassword'])->name('profile.updatePassword');
+    Route::post('profile/update-picture', [ProfileController::class, 'updatePicture'])->name('profile.updatePicture');
     Route::delete('profile', [ProfileController::class, 'delete'])->name('profile.delete');
 
     // Logout

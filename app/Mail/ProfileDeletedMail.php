@@ -9,18 +9,18 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class ProfileDeletedMail extends Mailable
+class ProfileDeletedMail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
-    protected $user;
+    public string $userName;
 
     /**
      * Create a new message instance.
      */
-    public function __construct($user)
+    public function __construct(string $userName)
     {
-        $this->user = $user;
+        $this->userName = $userName;
     }
 
     /**
@@ -39,9 +39,9 @@ class ProfileDeletedMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.profile_deleted',
+            markdown: 'emails.profile_deleted',
             with: [
-                'userName' => $this->user->name,
+                'userName' => $this->userName,
             ]
         );
     }

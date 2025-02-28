@@ -22,5 +22,11 @@ class DatabaseSeeder extends Seeder
             ['name' => 'user'],
             ['name' => 'user']
         );
+
+        // $this->call([
+        //     UserSeeder::class
+        // ]);
+
+        User::factory(10000)->create();
     }
 }

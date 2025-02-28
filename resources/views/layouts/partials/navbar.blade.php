@@ -12,21 +12,9 @@
             </li>
             <li class="nav-item d-none d-md-block"><a href="{{ route('admin.home') }}" class="nav-link">Admin
                     Dashboard</a></li>
-            {{-- @if (auth()->user()->role->name === 'user')
-                <li class="nav-item d-none d-md-block">
-                    <a href="
-                    {{route('user.addPost')}}
-                    " class="nav-link">Add Post</a>
-                </li>
-                <a class="nav-link" href="
-                {{ route('myPosts') }}
-                 ">My Blog Posts</a>
-                <a class="nav-link" href="
-                {{ route('allUserPosts') }}
-                 ">Others Blog Posts</a>
-                @endif --}}
         </ul>
         <!--end::Start Navbar Links-->
+
         <!--begin::End Navbar Links-->
         <ul class="navbar-nav ms-auto">
 
@@ -38,9 +26,17 @@
                 </a>
             </li>
             <!--end::Fullscreen Toggle-->
+
             <!--begin::User Menu Dropdown-->
             <li class="nav-item dropdown user-menu">
                 <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                    <!-- Display profile picture if available, else show default picture -->
+                    @php
+                        $profilePicture = auth()->user()->media()->where('photo_type', 'profile_picture')->first();
+                    @endphp
+
+                    <img src="{{ $profilePicture ? asset($profilePicture->path) : asset('storage/uploads/profile_pictures/default_profile.jpg') }}"
+                        alt="Profile Picture" class="rounded-circle" width="30" height="30">
                     <span class="d-none d-md-inline">{{ auth()->user()->name }} </span>
                 </a>
                 <ul class="dropdown-menu dropdown-menu dropdown-menu-end">
@@ -51,24 +47,14 @@
                     <!--end::Menu Body-->
                     <!--begin::Menu Footer-->
                     <li class="user-footer">
-                        <a href="
-                        {{ route('profile.show') }}
-                            "
-                            class="btn btn-default btn-flat">Profile</a>
-                        <a class="btn btn-default btn-flat float-end"
-                            href="
-                        {{ route('logout') }}
-                         "
+                        <a href="{{ route('profile.show') }}" class="btn btn-default btn-flat">Profile</a>
+                        <a class="btn btn-default btn-flat float-end" href="{{ route('logout') }}"
                             onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
+                                         document.getElementById('logout-form').submit();">
                             {{ __('Logout') }}
                         </a>
 
-                        <form id="logout-form"
-                            action="
-                        {{ route('logout') }}
-                         "
-                            method="POST" class="d-none">
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                             @csrf
                         </form>
                     </li>

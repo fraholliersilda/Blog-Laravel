@@ -65,10 +65,10 @@ class User extends Authenticatable
         return in_array($this->role?->name, $roles, true);
     }
 
-    // public function media()
-    // {
-    //     return $this->hasMany(Media::class);
-    // }
+    public function media()
+    {
+        return $this->hasMany(Media::class, 'user_id');
+    }
 
     // public function posts()
     // {

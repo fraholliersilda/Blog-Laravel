@@ -1,15 +1,16 @@
-<!DOCTYPE html>
-<html>
+<x-mail::message>
+# Profile Deleted
 
-<head>
-    <title>Your Profile has been Deleted</title>
-</head>
+Hello {{ $userName }},
 
-<body>
-    <h1>Dear {{ $userName }},</h1>
-    <p>Your profile has been successfully deleted. If you did not request this action, please contact us immediately.
-    </p>
-    <p>Thank you for using our service!</p>
-</body>
+Your profile has been successfully deleted.
 
-</html>
+If this was not you, please [contact support](mailto:support@example.com) immediately.
+
+<x-mail::button :url="url('/login')">
+Go Back to Login
+</x-mail::button>
+
+Thanks for being with us!
+**{{ config('app.name') }} Team**
+</x-mail::message>

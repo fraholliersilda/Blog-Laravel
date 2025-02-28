@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Gate;
 use App\Models\Post;
 use App\Models\User;
 use App\Models\Media;
+use Illuminate\Pagination\Paginator;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -23,7 +24,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
 {
-    
+    Paginator::useBootstrapFive();
 }
 
 }

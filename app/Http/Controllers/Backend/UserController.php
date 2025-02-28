@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use DB;
+use App\Models\User;
 
 class UserController extends Controller
 {
@@ -16,7 +17,7 @@ class UserController extends Controller
 
     public function allUser()
     {
-        $all = DB::table('users')->where('role_id', '!=', 1)->get();
+        $all = User::where('role_id', '!=', 1)->paginate(12);
         return view('backend.user.all-user', compact('all'));
     }
 
