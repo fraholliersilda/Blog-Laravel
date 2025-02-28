@@ -14,13 +14,13 @@
                     <form action="{{ route('profile.updatePicture') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="mb-3">
-                            <label for="profile_picture" class="form-label">Update Profile Picture</label>
+                            <label for="profile_picture" class="form-label">{{__('app.update_picture')}}</label>
                             <input type="file" name="profile_picture" id="profile_picture" class="form-control">
                             @error('profile_picture')
                                 <div class="alert alert-danger mt-2">{{ $message }}</div>
                             @enderror
                         </div>
-                        <button type="submit" class="btn btn-primary">Update Picture</button>
+                        <button type="submit" class="btn btn-primary">{{__('app.update_picture')}}</button>
                     </form>
                 </div>
             </div>
@@ -36,14 +36,14 @@
 
             <div class="card mb-4">
                 <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0">Personal Information</h5>
+                    <h5 class="mb-0">{{__('app.personal_information')}}</h5>
                 </div>
                 <div class="card-body">
                     <form action="{{ route('profile.update') }}" method="POST">
                         @csrf
                         <div class="row mb-3">
                             <div class="col-sm-3">
-                                <label for="name" class="form-label">Name</label>
+                                <label for="name" class="form-label">{{__('app.name')}}</label>
                             </div>
                             <div class="col-sm-9">
                                 <input type="text" name="name" id="name" class="form-control" value="{{ old('name', $user->name) }}">
@@ -66,7 +66,7 @@
                         </div>
 
                         <div class="text-end">
-                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                            <button type="submit" class="btn btn-primary">{{__('app.save_changes')}}</button>
                         </div>
                     </form>
                 </div>
@@ -74,14 +74,14 @@
 
             <div class="card mb-4">
                 <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0">Security</h5>
+                    <h5 class="mb-0">{{__('app.security')}}</h5>
                 </div>
                 <div class="card-body">
                     <form action="{{ route('profile.updatePassword') }}" method="POST">
                         @csrf
                         <div class="row mb-3">
                             <div class="col-sm-3">
-                                <label for="password" class="form-label">New Password</label>
+                                <label for="password" class="form-label">{{__('app.new_password')}}</label>
                             </div>
                             <div class="col-sm-9">
                                 <input type="password" name="password" id="password" class="form-control">
@@ -93,7 +93,7 @@
 
                         <div class="row mb-3">
                             <div class="col-sm-3">
-                                <label for="password_confirmation" class="form-label">Confirm Password</label>
+                                <label for="password_confirmation" class="form-label">{{__('app.confirm_password')}}</label>
                             </div>
                             <div class="col-sm-9">
                                 <input type="password" name="password_confirmation" id="password_confirmation" class="form-control">
@@ -101,7 +101,7 @@
                         </div>
 
                         <div class="text-end">
-                            <button type="submit" class="btn btn-primary">Update Password</button>
+                            <button type="submit" class="btn btn-primary">{{__('app.update_password')}}</button>
                         </div>
                     </form>
                 </div>
@@ -109,16 +109,16 @@
 
             <div class="card">
                 <div class="card-header bg-danger text-white">
-                    <h5 class="mb-0">Delete Account</h5>
+                    <h5 class="mb-0">{{__('app.delete_account')}}</h5>
                 </div>
                 <div class="card-body">
-                    <p class="text-muted">Once you delete your account, there is no going back. Please be certain.</p>
+                    <p class="text-muted">{{__('app.delete_text')}}</p>
                     <form action="{{ route('profile.delete') }}" method="POST"
                         onsubmit="return confirm('Are you sure you want to delete your profile? This action cannot be undone.')">
                         @csrf
                         @method('DELETE')
                         <div class="text-end">
-                            <button type="submit" class="btn btn-danger">Delete Account</button>
+                            <button type="submit" class="btn btn-danger">{{__('app.delete_account')}}</button>
                         </div>
                     </form>
                 </div>

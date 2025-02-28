@@ -49,6 +49,9 @@ Route::middleware(['auth', 'role:admin|user'])->group(function () {
     // Profile
     // Logout
 
+    //Language switch
+    Route::get('language/{lang}', [App\Http\Controllers\LanguageController::class, 'switchLang'])->name('language.switch');
+
     // Profile Management
     Route::get('profile', [ProfileController::class, 'show'])->name('profile.show');
     Route::post('profile', [ProfileController::class, 'update'])->name('profile.update');

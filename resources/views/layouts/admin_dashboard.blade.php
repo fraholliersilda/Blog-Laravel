@@ -7,9 +7,7 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        <h5 class="card-title text-center  me-4">Welcome, {{ auth()->user()->name }}! @if (auth()->user()->role->name == 'user')
-                                What would you like to do today?
-                            @endif
+                        <h5 class="card-title text-center  me-4"> {{ __('app.welcome', ['name' => auth()->user()->name]) }}
                         </h5>
                         <div class="card-tools">
                             <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
@@ -25,10 +23,10 @@
 
                     <div class="card-footer">
                         <div class="card p-3 shadow-sm">
-                            <p class="mb-2"><span>Want to share your review the users? </span>
+                            <p class="mb-2"><span>{{ __('app.want_to_review_users') }} </span>
                                 <br><br>
                                 <a href="{{ route('alluser') }}" class="btn btn-success btn-lg"><i
-                                        class="bi bi-pencil-square"></i>Review Users</a>
+                                        class="bi bi-pencil-square"></i>{{ __('app.review_users') }}</a>
                             </p>
                         </div>
                     </div>

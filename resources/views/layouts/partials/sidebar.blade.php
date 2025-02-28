@@ -8,7 +8,7 @@
                 class="brand-image opacity-75 shadow" /> --}}
             <!--end::Brand Image-->
             <!--begin::Brand Text-->
-            <span class="brand-text fw-light"> PROJECT</span>
+            <span class="brand-text fw-light"> {{ __('app.project') }}</span>
             <!--end::Brand Text-->
         </a>
         <!--end::Brand Link-->
@@ -23,7 +23,7 @@
                     <a href="home" class="nav-link active">
                         <i class="nav-icon bi bi-speedometer"></i>
                         <p>
-                            Dashboard
+                            {{ __('app.dashboard') }}
                         </p>
                     </a>
                 </li>
@@ -31,7 +31,7 @@
                     <li class="nav-item">
                         <a href="{{ route('alluser') }}" class="nav-link">
                             <i class="nav-icon bi bi-circle"></i>
-                            <p>All User</p>
+                            <p>{{ __('app.all_users') }}</p>
                         </a>
                     </li>
                 @endif
@@ -41,7 +41,7 @@
                     <a href="#" class="nav-link">
                         <i class="nav-icon bi bi-clipboard-fill"></i>
                         <p>
-                            User Management
+                            {{ __('app.user_management') }}
                             <span class="nav-badge badge text-bg-secondary me-3">6</span>
                             <i class="nav-arrow bi bi-chevron-right"></i>
                         </p>
@@ -50,15 +50,13 @@
                         <li class="nav-item">
                             <a href="{{route('alluser')}}" class="nav-link">
                                 <i class="nav-icon bi bi-circle"></i>
-                                <p>All User</p>
+                                <p>{{ __('app.all_users') }}</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="
-                            {{route('addUserIndex')}}
-                            " class="nav-link">
+                            <a href="{{route('addUserIndex')}}" class="nav-link">
                                 <i class="nav-icon bi bi-circle"></i>
-                                <p>Add User</p>
+                                <p>{{ __('app.add_user') }}</p>
                             </a>
                         </li>
                     </ul>
@@ -67,26 +65,22 @@
                     <a href="#" class="nav-link">
                         <i class="nav-icon bi bi-clipboard-fill"></i>
                         <p>
-                            Post Management
+                            {{ __('app.post_management') }}
                             <span class="nav-badge badge text-bg-secondary me-3">6</span>
                             <i class="nav-arrow bi bi-chevron-right"></i>
                         </p>
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="
-                            {{route('allPost')}}
-                            " class="nav-link">
+                            <a href="{{route('allPost')}}" class="nav-link">
                                 <i class="nav-icon bi bi-circle"></i>
-                                <p>All Post</p>
+                                <p>{{ __('app.all_posts') }}</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="
-                            {{route('addPostIndex')}}
-                            " class="nav-link">
+                            <a href="{{route('addPostIndex')}}" class="nav-link">
                                 <i class="nav-icon bi bi-circle"></i>
-                                <p>Add Post</p>
+                                <p>{{ __('app.add_post') }}</p>
                             </a>
                         </li>
                     </ul>

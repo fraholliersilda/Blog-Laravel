@@ -49,7 +49,7 @@
                         <div class="form-floating">
                             <input id="registerFullName" name="name" type="text" class="form-control"
                                 placeholder="" />
-                            <label for="registerFullName">Full Name</label>
+                            <label for="registerFullName">{{__('auth.register.name')}}</label>
                         </div>
                         <div class="input-group-text"><span class="bi bi-person"></span></div>
                     </div>
@@ -57,7 +57,7 @@
                         <div class="form-floating">
                             <input id="registerEmail" name="email" type="email" class="form-control"
                                 placeholder="" />
-                            <label for="registerEmail">Email</label>
+                            <label for="registerEmail">{{__('auth.register.email')}}</label>
                         </div>
                         <div class="input-group-text"><span class="bi bi-envelope"></span></div>
                     </div>
@@ -65,7 +65,7 @@
                         <div class="form-floating">
                             <input id="registerPassword" name="password" type="password" class="form-control"
                                 placeholder="" />
-                            <label for="registerPassword">Password</label>
+                            <label for="registerPassword">{{__('auth.register.password')}}</label>
                         </div>
                         <div class="input-group-text"><span class="bi bi-lock-fill"></span></div>
                     </div>
@@ -73,7 +73,7 @@
                         <div class="form-floating">
                             <input id="password-confirm" name="password_confirmation" type="password"
                                 class="form-control" placeholder="" />
-                            <label for="password-confirm">Confirm Password</label>
+                            <label for="password-confirm">{{__('auth.register.password_confirmation')}}</label>
                         </div>
                         <div class="input-group-text"><span class="bi bi-lock-fill"></span></div>
                     </div>

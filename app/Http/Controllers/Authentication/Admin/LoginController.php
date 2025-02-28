@@ -37,6 +37,11 @@ class LoginController extends Controller
                 ]);
             }
 
+            if ($user->language) {
+                session()->put('applocale', $user->language);
+                app()->setLocale($user->language);
+            }
+
             $request->session()->regenerate();
 
             return redirect()->intended(route('admin.home'))
@@ -51,10 +56,15 @@ class LoginController extends Controller
 
     public function logout(Request $request)
     {
+
+        $laguage = session('applocale');
+
         Auth::logout();
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();
+
+        session()->put('applocale', $laguage);
 
         return redirect()->route('login')
             ->with('success', 'You have been logged out successfully.');

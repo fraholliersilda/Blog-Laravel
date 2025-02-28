@@ -54,7 +54,7 @@
                         <div class="form-floating">
                             <input id="loginEmail" name="email" type="email" class="form-control" value=""
                                 placeholder="" />
-                            <label for="loginEmail">Email</label>
+                            <label for="loginEmail">{{ __('Email') }}</label>
                         </div>
                         <div class="input-group-text"><span class="bi bi-envelope"></span></div>
                     </div>
@@ -62,7 +62,7 @@
                         <div class="form-floating">
                             <input id="loginPassword" name="password" type="password" class="form-control"
                                 placeholder="" />
-                            <label for="loginPassword">Password</label>
+                            <label for="loginPassword">{{ __('Password') }}</label>
                         </div>
                         <div class="input-group-text"><span class="bi bi-lock-fill"></span></div>
                     </div>
@@ -71,7 +71,7 @@
                         <div class="col-8 d-inline-flex align-items-center">
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" />
-                                <label class="form-check-label" for="flexCheckDefault"> Remember Me </label>
+                                <label class="form-check-label" for="flexCheckDefault"> {{ __('Remember Me') }}</label>
                             </div>
                         </div>
                         <!-- /.col -->
