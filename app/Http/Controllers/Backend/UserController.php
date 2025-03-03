@@ -2,22 +2,25 @@
 
 namespace App\Http\Controllers\backend;
 use App\Http\Requests\UserRequest;
-use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use DB;
-use App\Models\User;
+use App\Services\UserService;
+
 
 class UserController extends Controller
 {
-    public function __construct()
+
+    public $userService;
+
+    public function __construct(UserService $userService)
     {
         $this->middleware('auth');
+        $this->userService = $userService;
     }
 
     public function allUser()
     {
-        $all = User::where('role_id', '!=', 1)->paginate(12);
+        $all = $this->userService->getAllNonAdminUsers();
         return view('backend.user.all-user', compact('all'));
     }
 
@@ -29,19 +32,9 @@ class UserController extends Controller
 
     public function insertUser(UserRequest $request)
     {
-        $request->validated();
-
-        $data = [
-            'name' => $request->name,
-            'email' => $request->email,
-            'role_id' => $request->role_id,
-            'password' => Hash::make($request->password),
-            'created_at' => now(),
-            'updated_at' => now(),
-        ];
-
-        $insert = DB::table('users')->insert($data);
-        if ($insert) {
+        $validatedData = $request->validated();
+        $inserted = $this->userService->createUser($validatedData);
+        if ($inserted) {
             return redirect()->route('allUser')->with('success', 'User added successfully.');
         } else {
             return redirect()->back()->with('error', 'Failed to add user.');
@@ -50,30 +43,21 @@ class UserController extends Controller
 
     public function editUser($id)
     {
-        $edit = DB::table('users')->where('id', $id)->first();
+        $edit = $this->userService->getUserById($id);
         return view('backend.user.edit_user', compact('edit'));
     }
 
     public function updateUser(Request $request, $id)
     {
-        $request->validated();
-
-        $data = [
-            'name' => $request->name,
-            'email' => $request->email,
-            'role_id' => $request->role_id,
-            'updated_at' => now(),
-        ];
-
-
-        DB::table('users')->where('id', $id)->update($data);
+        $validatedData = $request->validated();
+        $this->userService->updateUser($id, $validatedData);
 
         return redirect()->route('allUser')->with('success', 'User updated successfully.');
     }
 
     public function deleteUser($id)
     {
-        DB::table('users')->where('id', $id)->delete();
+        $this->userService->deleteUser($id);
         return redirect()->route('allUser')->with('success', 'User deleted successfully.');
 
     }

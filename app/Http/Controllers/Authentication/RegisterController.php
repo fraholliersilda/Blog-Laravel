@@ -4,17 +4,15 @@ namespace App\Http\Controllers\Authentication;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RegisterRequest;
-use Illuminate\Http\Request;
-use App\Models\User;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Auth;
-use App\Models\Role;
+use App\Services\RegisterService;
 
 class RegisterController extends Controller
 {
-    public function __construct()
+
+    public $registerService;
+    public function __construct(RegisterService $registerService)
     {
-        $this->middleware('guest');
+        $this->registerService = $registerService;
     }
 
     public function showRegister()
@@ -24,22 +22,13 @@ class RegisterController extends Controller
 
     public function register(RegisterRequest $request)
     {
-        $credentials = $request->validated();
-        $role = Role::where('name', 'user')->first();
-        if (!$role) {
+        $validatedData = $request->validated();
+
+        if(!$this->registerService->hasDefaultUserRole()){
             return back()->withErrors(['role' => 'The default User role is missing. Contact the admin.']);
         }
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'role_id' => $role->id,
-        ]);
-
-        Auth::login($user);
-
-        return redirect()->route('user.home')
-            ->with('success', 'Registration successful! Welcome, ' . $user->name);
+        $user = $this->registerService->createUser($validatedData);
+        return redirect()->route('user.home')->with('success','Registration successful! Welcome,' . $user->name );
     }
 }

@@ -6,18 +6,20 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\ValidationException;
+use App\Services\AuthService;
 
 class LoginController extends Controller
 {
-    public function __construct()
+    public $authService;
+    public function __construct(AuthService $authService)
     {
-        $this->middleware('guest')->except('logout');
+        $this->authService = $authService;
+
     }
 
     public function showLogin()
     {
-        if (Auth::check()) {
+        if ($this->authService->isAuthenticated()) {
             return redirect()->route('home');
         }
         return view("auth.login");
@@ -28,43 +30,18 @@ class LoginController extends Controller
 
         $credentials = $request->validated();
 
-        if (Auth::attempt($credentials)) {
-            $user = Auth::user();
+        $result = $this->authService->attemptLogin($credentials);
 
-            if ($user->role_id !== 2) {
-                Auth::logout();
-                throw ValidationException::withMessages([
-                    'email' => ['These credentials do not match our records.'],
-                ]);
-            }
+        $request ->session()->regenerate();
 
-            if ($user->language) {
-                session()->put('applocale', $user->language);
-                app()->setLocale($user->language);
-            }
-
-            $request->session()->regenerate();
-
-            return redirect()->intended(route('user.home'))
-                ->with('success', 'Welcome back, ' . Auth::user()->name);
-        }
-
-        throw ValidationException::withMessages([
-            'email' => ['These credentials do not match our records.'],
-        ]);
+        return redirect()->intended(route("user.home"))
+            ->with('success', 'Welcome back.' . $result['user']->name);
     }
 
     public function logout(Request $request)
     {
 
-        $language = session('applocale');
-
-        Auth::logout();
-
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        session()->put('applocale', $language);
+        $this->authService->logout($request);
 
         return redirect()->route('login')
             ->with('success', 'You have been logged out successfully.');

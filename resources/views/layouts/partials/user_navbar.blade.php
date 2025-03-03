@@ -53,6 +53,12 @@
             <!--begin::User Menu Dropdown-->
             <li class="nav-item dropdown user-menu">
                 <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                    @php
+                        $profilePicture = auth()->user()->media()->where('photo_type', 'profile_picture')->first();
+                    @endphp
+
+                    <img src="{{ $profilePicture ? asset($profilePicture->path) : asset('storage/uploads/profile_pictures/default_profile.jpg') }}"
+                        alt="{{ __('app.profile_picture') }}" class="rounded-circle" width="30" height="30">
                     <span class="d-none d-md-inline">{{ auth()->user()->name }}</span>
                 </a>
                 <ul class="dropdown-menu dropdown-menu dropdown-menu-end">
@@ -77,6 +83,7 @@
                 </ul>
             </li>
             <!--end::User Menu Dropdown-->
+
         </ul>
         <!--end::End Navbar Links-->
     </div>

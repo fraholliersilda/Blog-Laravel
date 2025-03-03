@@ -4,21 +4,21 @@ namespace App\Http\Controllers\Authentication\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
+use App\Services\AuthService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\ValidationException;
 
 class LoginController extends Controller
 {
-    public function __construct()
+
+    public $authService;
+    public function __construct(AuthService $authService)
     {
-        $this->middleware('guest:admin')->except('logout');
+        $this->authService = $authService;
     }
 
     public function showLogin()
     {
-
-        if (Auth::guard('admin')->check()) {
+        if ($this->authService->isAuthenticated('admin')) {
             return redirect()->route('admin.home');
         }
         return view("auth.admin.login");
@@ -27,44 +27,20 @@ class LoginController extends Controller
     public function login(LoginRequest $request)
     {
         $credentials = $request->validated();
-        if (Auth::attempt($credentials)) {
-            $user = Auth::user();
 
-            if ($user->role_id !== 1) {
-                Auth::logout();
-                throw ValidationException::withMessages([
-                    'email' => ['You do not have administrative privileges.'],
-                ]);
-            }
+        $result = $this->authService->attemptAdminLogin($credentials);
 
-            if ($user->language) {
-                session()->put('applocale', $user->language);
-                app()->setLocale($user->language);
-            }
+        $request->session()->regenerate();
 
-            $request->session()->regenerate();
-
-            return redirect()->intended(route('admin.home'))
-                ->with('success', 'Welcome back, ' . $user->name);
-        }
-
-        throw ValidationException::withMessages([
-            'email' => ['These credentials do not match our records.'],
-        ]);
+        return redirect()->intended(route('admin.home'))
+            ->with('success', 'Welcome back, ' . $result['user']->name);
     }
 
 
     public function logout(Request $request)
     {
 
-        $laguage = session('applocale');
-
-        Auth::logout();
-
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        session()->put('applocale', $laguage);
+        $this->authService->logout($request);
 
         return redirect()->route('login')
             ->with('success', 'You have been logged out successfully.');

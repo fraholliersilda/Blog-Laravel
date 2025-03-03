@@ -1,18 +1,22 @@
 <?php
 
 namespace App\Http\Controllers\Authentication;
+
 use App\Http\Requests\ForgotPasswordRequest;
 use App\Http\Requests\ResetPasswordRequest;
-use App\Models\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Password;
-use Illuminate\Auth\Events\PasswordReset;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
+use App\Services\PasswordService;
 
 class PasswordController extends Controller
 {
+
+    public $passwordService;
+
+    public function __construct(PasswordService $passwordService)
+    {
+        $this->passwordService = $passwordService;
+    }
 
     public function showForgotPasswordForm()
     {
@@ -26,33 +30,23 @@ class PasswordController extends Controller
 
     public function sendResetLink(ForgotPasswordRequest $request)
     {
+        $status = $this->passwordService->sendResetLink($request->only('email'));
 
-        $status = Password::sendResetLink($request->only('email'));
-
-        return $status == Password::RESET_LINK_SENT
-            ? back()->with('status', __($status))
-            : back()->withErrors(['email' => __($status)]);
+        return $this ->passwordService->isResetLinkSent($status)
+        ? back()->with('status', __($status))
+        : back()->withErrors(['email' => __($status)]);
     }
 
 
     public function resetPassword(ResetPasswordRequest $request)
     {
-        $status = Password::reset(
-            $request->only('email', 'password', 'password_confirmation', 'token'),
-            function (User $user, string $password) {
-                $user->forceFill([
-                    'password' => Hash::make($password)
-                ])->setRememberToken(Str::random(60));
-
-                $user->save();
-
-                event(new PasswordReset($user));
-            }
+        $status = $this->passwordService->resetPassword(
+            $request->only('email', 'password', 'password_confirmation', 'token')
         );
 
-        return $status === Password::PasswordReset
-            ? redirect()->route('login')->with('status', __($status))
-            : back()->withErrors(['email' => [__($status)]]);
+        return $this ->passwordService->isPasswordReset($status)
+        ? redirect()->route('login')->with('status', __($status))
+        : back()->withErrors(['email' => __($status)]);
     }
 
 }
