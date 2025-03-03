@@ -47,7 +47,7 @@ class UserController extends Controller
         return view('backend.user.edit_user', compact('edit'));
     }
 
-    public function updateUser(Request $request, $id)
+    public function updateUser(UserRequest $request, $id)
     {
         $validatedData = $request->validated();
         $this->userService->updateUser($id, $validatedData);

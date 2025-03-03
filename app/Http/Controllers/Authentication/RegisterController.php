@@ -24,10 +24,6 @@ class RegisterController extends Controller
     {
         $validatedData = $request->validated();
 
-        if(!$this->registerService->hasDefaultUserRole()){
-            return back()->withErrors(['role' => 'The default User role is missing. Contact the admin.']);
-        }
-
         $user = $this->registerService->createUser($validatedData);
         return redirect()->route('user.home')->with('success','Registration successful! Welcome,' . $user->name );
     }
