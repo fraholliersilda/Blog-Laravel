@@ -8,22 +8,6 @@ use Illuminate\Support\Facades\DB;
 
 class UserService
 {
-    // public function store()
-    // {
-
-
-    // }
-
-    // public function update()
-    // {
-
-
-    // }
-
-    // public function delete($id)
-    // {
-
-    // }
 
     public function update(array $data)
     {
@@ -56,19 +40,20 @@ class UserService
     }
 
 
-    public function getAllNonAdminUsers(int $PerPage = 12){
-        return User::where('role_id','!=', 1)->paginate($PerPage);
+    public function getAllNonAdminUsers(int $PerPage = 12)
+    {
+        return User::where('role_id', '!=', 1)->paginate($PerPage);
     }
 
     public function createUser(array $data)
     {
         $userData = [
-            'name'=> $data['name'],
-            'email'=> $data['email'],
-            'role_id'=> $data['role_id'],
-            'password'=> Hash::make($data['password']),
-            'created_at'=> now(),
-            'updated_at'=> now(),
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'role_id' => $data['role_id'],
+            'password' => Hash::make($data['password']),
+            'created_at' => now(),
+            'updated_at' => now(),
         ];
 
         return DB::table('users')->insert($userData);
@@ -83,11 +68,14 @@ class UserService
     public function updateUser(int $id, array $data)
     {
         $userData = [
-            'name'=> $data['name'],
-            'email'=> $data['email'],
-            'role_id'=> $data['role_id'],
-            'updated_at'=> now(),
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'updated_at' => now(),
         ];
+
+        if (isset($data['role_id'])) {
+            $userData['role_id'] = $data['role_id'];
+        }
 
         return DB::table('users')->where('id', $id)->update($userData) ? true : false;
     }

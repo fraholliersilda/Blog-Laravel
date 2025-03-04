@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use App\Mail\UserCountMonthlyMail;
 use Illuminate\Support\Facades\Mail;
 use App\Models\User;
+use Log;
 
 class SendEmails extends Command
 {
@@ -35,6 +36,8 @@ class SendEmails extends Command
         foreach ($admins as $adminEmail) {
             Mail::to($adminEmail)->send(new UserCountMonthlyMail());
         }
+
+        // Log::channel('emails')->info('Monthly user count email sent to all admins.');
 
         $this->info('Monthly user count email sent to all admins.');
     }

@@ -34,7 +34,7 @@ class LoginController extends Controller
 
         $request ->session()->regenerate();
 
-        return redirect()->intended('user.home')
+        return redirect()->intended('home')
             ->with('success', 'Welcome back.' . $result['user']->name);
     }
 

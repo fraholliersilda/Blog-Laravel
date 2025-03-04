@@ -35,7 +35,7 @@ class UserController extends Controller
         $validatedData = $request->validated();
         $inserted = $this->userService->createUser($validatedData);
         if ($inserted) {
-            return redirect()->route('allUser')->with('success', 'User added successfully.');
+            return redirect()->route('alluser')->with('success', 'User added successfully.');
         } else {
             return redirect()->back()->with('error', 'Failed to add user.');
         }
@@ -50,15 +50,21 @@ class UserController extends Controller
     public function updateUser(UserRequest $request, $id)
     {
         $validatedData = $request->validated();
-        $this->userService->updateUser($id, $validatedData);
+        $updated = $this->userService->updateUser($id, $validatedData);
 
-        return redirect()->route('allUser')->with('success', 'User updated successfully.');
+        if ($updated) {
+            return redirect()->route('alluser')->with('success', 'User updated successfully.');
+        } else {
+            return redirect()->back()->with('error', 'Failed to update user.');
+        }
     }
+
+
 
     public function deleteUser($id)
     {
         $this->userService->deleteUser($id);
-        return redirect()->route('allUser')->with('success', 'User deleted successfully.');
+        return redirect()->route('alluser')->with('success', 'User deleted successfully.');
 
     }
 }

@@ -37,6 +37,9 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     // Show users
     //User management
     Route::get('/all-user', [UserController::class, 'allUser'])->name('alluser');
+    Route::post('/insert-user', [UserController::class, 'insertUser'])->name('insertUser');
+    Route::put('/update-user/{id}', [UserController::class, 'updateUser'])->name('updateUser');
+    Route::delete('/delete-user/{id}', [UserController::class, 'deleteUser'])->name('deleteUser');
 
     Route::get('/admin/home', [App\Http\Controllers\HomeController::class, 'adminDashboard'])->name('admin.home');
 });

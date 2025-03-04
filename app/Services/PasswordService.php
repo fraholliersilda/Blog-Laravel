@@ -15,7 +15,7 @@ class PasswordService
         return Password::sendResetLink($data);
     }
 
-    public function resetPassword (array $data)
+    public function resetPassword(array $data)
     {
         return Password::reset(
             $data,

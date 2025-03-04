@@ -274,13 +274,48 @@
                 "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
             }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
             $('#example2').DataTable({
-                "paging": true,
-                "lengthChange": false,
+                "paging": false,
+                "lengthChange": true,
                 "searching": false,
                 "ordering": true,
-                "info": true,
+                "info": false,
                 "autoWidth": false,
                 "responsive": true,
+            });
+        });
+
+        //All Users modals
+        $(document).ready(function() {
+            $('.edit-btn').on('click', function() {
+                var id = $(this).data('id');
+                var name = $(this).data('name');
+                var email = $(this).data('email');
+
+                $('#edit_name').val(name);
+                $('#edit_email').val(email);
+
+                var url = "{{ route('updateUser', ':id') }}".replace(':id', id);
+                $('#editUserForm').attr('action', url);
+
+                $('#editUserModal').modal('show');
+            });
+
+
+
+            $('.delete-btn').on('click', function() {
+                var id = $(this).data('id');
+                var name = $(this).data('name');
+
+                $('#delete_user_name').text(name);
+
+                var url = "{{ route('deleteUser', ':id') }}".replace(':id', id);
+                $('#deleteUserForm').attr('action', url);
+
+                $('#deleteUserModal').modal('show');
+            });
+
+            $('.btn-primary').on('click', function() {
+                $('#addUserModal').modal('show');
             });
         });
     </script>

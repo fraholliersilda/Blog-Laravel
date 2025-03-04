@@ -10,4 +10,4 @@ Artisan::command('inspire', function () {
 })->purpose('Display an inspiring quote');
 
 
-Schedule::command('emails:send')->monthly();
+Schedule::command('emails:send')->monthly()->appendOutputTo(storage_path('logs/laravel.log'));

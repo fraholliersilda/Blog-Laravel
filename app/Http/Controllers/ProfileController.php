@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\UpdatePasswordRequest;
 use App\Mail\ProfileDeletedMail;
 use Illuminate\Support\Facades\Mail;
+use Log;
 
 
 class ProfileController extends Controller
@@ -50,9 +51,15 @@ class ProfileController extends Controller
 
     public function updatePicture(UpdateProfilePictureRequest $request)
     {
-        $this->mediaService->updateProfilePicture($request->file('profile_picture'));
+        try {
+            $this->mediaService->updateProfilePicture($request->file('profile_picture'));
 
-        return redirect()->route('profile.show')->with('success', 'Profile Picture updated successfully.');
+            return redirect()->route('profile.show')->with('success', 'Profile Picture updated successfully.');
+        } catch (\Throwable $th) {
+            //throw $th;
+            Log::error($th);
+            return back()->with('error', 'Something went wrong.');
+        }
     }
 
     public function delete()
