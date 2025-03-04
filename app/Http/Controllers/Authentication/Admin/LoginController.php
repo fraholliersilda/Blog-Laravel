@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
 use App\Services\AuthService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class LoginController extends Controller
 {
@@ -18,31 +19,49 @@ class LoginController extends Controller
 
     public function showLogin()
     {
-        if ($this->authService->isAuthenticated('admin')) {
-            return redirect()->route('admin.home');
+        try {
+            if ($this->authService->isAuthenticated('admin')) {
+                return redirect()->route('admin.home');
+            }
+            return view("auth.admin.login");
+        } catch (\Throwable $th) {
+            Log::error('Admin login page load error: ' . $th->getMessage());
+            return redirect()->back()->with('error', 'An error occurred while loading the admin login page.');
         }
-        return view("auth.admin.login");
     }
 
     public function login(LoginRequest $request)
     {
-        $credentials = $request->validated();
+        try {
+            $credentials = $request->validated();
 
-        $result = $this->authService->attemptAdminLogin($credentials);
+            $result = $this->authService->attemptAdminLogin($credentials);
 
-        $request->session()->regenerate();
+            $request->session()->regenerate();
 
-        return redirect()->intended(route('admin.home'))
-            ->with('success', 'Welcome back, ' . $result['user']->name);
+            return redirect()->intended(route('admin.home'))
+                ->with('success', 'Welcome back, ' . $result['user']->name);
+        } catch (\Throwable $th) {
+            Log::error('Admin login attempt error: ' . $th->getMessage());
+            return redirect()->back()
+                ->withInput($request->only('email'))
+                ->with('error', 'Admin login failed. Please check your credentials and try again.');
+        }
     }
 
 
     public function logout(Request $request)
     {
 
-        $this->authService->logout($request);
+        try {
+            $this->authService->logout($request);
 
-        return redirect()->route('login')
-            ->with('success', 'You have been logged out successfully.');
+            return redirect()->route('login')
+                ->with('success', 'You have been logged out successfully.');
+        } catch (\Throwable $th) {
+            Log::error('Admin logout error: ' . $th->getMessage());
+            return redirect()->route('login')
+                ->with('error', 'An error occurred during logout.');
+        }
     }
 }
