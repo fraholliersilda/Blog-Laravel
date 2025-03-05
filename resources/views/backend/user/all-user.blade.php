@@ -25,10 +25,34 @@
                             <table id="example2" class="table table-bordered table-hover mb-4">
                                 <thead>
                                     <tr>
-                                        <th>Serial</th>
-                                        <th>Name</th>
-                                        <th>Email</th>
-                                        <th>Role</th>
+                                        <th>
+                                            <a href="{{ request()->fullUrlWithQuery(['column' => 'name', 'direction' => request('direction', 'desc') === 'desc' ? 'asc' : 'desc']) }}" class="text-decoration-none text-dark">
+                                                Name
+                                                @if(request('column') === 'name')
+                                                    @if(request('direction', 'desc') === 'desc')
+                                                        <i class="fas fa-sort-down"></i>
+                                                    @else
+                                                        <i class="fas fa-sort-up"></i>
+                                                    @endif
+                                                @else
+                                                    <i class="fas fa-sort text-muted"></i>
+                                                @endif
+                                            </a>
+                                        </th>
+                                        <th>
+                                            <a href="{{ request()->fullUrlWithQuery(['column' => 'email', 'direction' => request('direction', 'desc') === 'desc' ? 'asc' : 'desc']) }}" class="text-decoration-none text-dark">
+                                                Email
+                                                @if(request('column') === 'email')
+                                                    @if(request('direction', 'desc') === 'desc')
+                                                        <i class="fas fa-sort-down"></i>
+                                                    @else
+                                                        <i class="fas fa-sort-up"></i>
+                                                    @endif
+                                                @else
+                                                    <i class="fas fa-sort text-muted"></i>
+                                                @endif
+                                            </a>
+                                        </th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
@@ -37,10 +61,8 @@
 
                                     @foreach ($all as $key => $row)
                                         <tr>
-                                            <td>{{ $key + 1 }}</td>
                                             <td>{{ $row->name }}</td>
                                             <td>{{ $row->email }}</td>
-                                            <td>{{ $row->role_id == 1 ? 'Admin' : ($row->role_id == 2 ? 'User' : 'Unknown') }}
                                             </td>
                                             <td>
                                                 <button type="button" class="btn btn-success btn-sm edit-btn"
@@ -62,10 +84,8 @@
                                 </tbody>
                                 <tfoot>
                                     <tr>
-                                        <th>Serial</th>
                                         <th>Name</th>
                                         <th>Email</th>
-                                        <th>Role</th>
                                         <th>Actions</th>
                                     </tr>
                                 </tfoot>
@@ -209,3 +229,28 @@
         </div>
     </div>
 @endsection
+
+@push('scripts')
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll('.edit-btn').forEach(button => {
+            button.addEventListener('click', function () {
+                let modal = document.getElementById('editUserModal');
+                modal.querySelector('#edit_name').value = this.getAttribute('data-name');
+                modal.querySelector('#edit_email').value = this.getAttribute('data-email');
+                let form = modal.querySelector('#editUserForm');
+                form.action = "/users/update/" + this.getAttribute('data-id');
+            });
+        });
+
+        document.querySelectorAll('.delete-btn').forEach(button => {
+            button.addEventListener('click', function () {
+                let modal = document.getElementById('deleteUserModal');
+                modal.querySelector('#delete_user_name').textContent = this.getAttribute('data-name');
+                let form = modal.querySelector('#deleteUserForm');
+                form.action = "/users/delete/" + this.getAttribute('data-id');
+            });
+        });
+    });
+</script>
+@endpush

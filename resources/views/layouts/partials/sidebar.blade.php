@@ -3,10 +3,6 @@
     <div class="sidebar-brand">
         <!--begin::Brand Link-->
         <a href="#" class="brand-link">
-            <!--begin::Brand Image-->
-            {{-- <img src="{{ asset('backend/dist/assets/img/AdminLTELogo.png') }}" alt="AdminLTE Logo"
-                class="brand-image opacity-75 shadow" /> --}}
-            <!--end::Brand Image-->
             <!--begin::Brand Text-->
             <span class="brand-text fw-light"> {{ __('app.project') }}</span>
             <!--end::Brand Text-->
@@ -20,7 +16,7 @@
             <!--begin::Sidebar Menu-->
             <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="menu" data-accordion="false">
                 <li class="nav-item">
-                    <a href="admin/home" class="nav-link active">
+                    <a href="admin/home" class="nav-link ">
                         <i class="nav-icon bi bi-speedometer"></i>
                         <p>
                             {{ __('app.dashboard') }}
@@ -30,37 +26,21 @@
                 @if (auth()->user()->role->name === 'admin')
                     <li class="nav-item">
                         <a href="{{ route('alluser') }}" class="nav-link">
-                            <i class="nav-icon bi bi-circle"></i>
+                            <i class="nav-icon bi bi-people"></i>
                             <p>{{ __('app.all_users') }}</p>
                         </a>
                     </li>
                 @endif
+                @if (auth()->user()->role->name === 'admin')
+                <li class="nav-item">
+                    <a href="{{ route('users.index') }}" class="nav-link">
+                        <i class="nav-icon bi bi-people"></i>
+                        <p>New All Users</p>
+                    </a>
+                </li>
+            @endif
 
                 {{-- @if (auth()->user()->role->name === 'admin')
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <i class="nav-icon bi bi-clipboard-fill"></i>
-                        <p>
-                            {{ __('app.user_management') }}
-                            <span class="nav-badge badge text-bg-secondary me-3">6</span>
-                            <i class="nav-arrow bi bi-chevron-right"></i>
-                        </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="{{route('alluser')}}" class="nav-link">
-                                <i class="nav-icon bi bi-circle"></i>
-                                <p>{{ __('app.all_users') }}</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{route('addUserIndex')}}" class="nav-link">
-                                <i class="nav-icon bi bi-circle"></i>
-                                <p>{{ __('app.add_user') }}</p>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
                 <li class="nav-item">
                     <a href="#" class="nav-link">
                         <i class="nav-icon bi bi-clipboard-fill"></i>

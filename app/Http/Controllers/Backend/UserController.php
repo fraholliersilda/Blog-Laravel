@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\backend;
+use App\DataTables\UsersDataTable;
 use App\Http\Requests\UserRequest;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -18,6 +19,16 @@ class UserController extends Controller
         $this->userService = $userService;
     }
 
+    public function index(UsersDataTable $dataTable)
+    {
+        try {
+            return $dataTable->render('backend.user.new-all-users');
+        } catch (\Throwable $th) {
+            Log::error('Error fetching users: ' . $th->getMessage());
+            return redirect()->back()->with('error', 'Failed to retrieve users.');
+        }
+    }
+
     public function allUser()
     {
         try {
@@ -29,17 +40,14 @@ class UserController extends Controller
         }
     }
 
-    public function addUserIndex()
-    {
-        return view('backend.user.add_user');
-    }
+
 
     public function insertUser(UserRequest $request)
     {
         try {
             $validatedData = $request->validated();
             $inserted = $this->userService->createUser($validatedData);
-
+            Log::info('Request data:', $request->all());
             if ($inserted) {
                 return redirect()->route('alluser')->with('success', 'User added successfully.');
             } else {

@@ -36,6 +36,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     // Dashboard
     // Show users
     //User management
+    Route::get('/new-all-users', [UserController::class, 'index'])->name('users.index');
     Route::get('/all-user', [UserController::class, 'allUser'])->name('alluser');
     Route::post('/insert-user', [UserController::class, 'insertUser'])->name('insertUser');
     Route::put('/update-user/{id}', [UserController::class, 'updateUser'])->name('updateUser');

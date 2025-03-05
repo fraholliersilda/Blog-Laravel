@@ -42,7 +42,23 @@ class UserService
 
     public function getAllNonAdminUsers(int $PerPage = 12)
     {
-        return User::where('role_id', '!=', 1)->paginate($PerPage);
+        $column = request('column', 'created_at');
+
+        $direction = request('direction', 'desc');
+
+        $allowedColumns = ['name', 'email', 'created_at'];
+
+        if (!in_array($column, $allowedColumns)) {
+            $column = 'created_at';
+        }
+
+        $direction = in_array(strtolower($direction), ['asc', 'desc'])
+            ? $direction
+            : 'desc';
+
+        return User::where('role_id', '!=', 1)
+            ->orderBy($column, $direction)
+            ->paginate($PerPage);
     }
 
     public function createUser(array $data)
@@ -52,6 +68,7 @@ class UserService
             'email' => $data['email'],
             'role_id' => $data['role_id'],
             'password' => Hash::make($data['password']),
+            'language' => 'en',
             'created_at' => now(),
             'updated_at' => now(),
         ];
