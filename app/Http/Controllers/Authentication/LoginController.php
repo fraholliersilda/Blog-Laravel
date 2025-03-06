@@ -27,7 +27,8 @@ class LoginController extends Controller
             return view("auth.login");
         } catch (\Throwable $th) {
             Log::error('Login page load error: ' . $th->getMessage());
-            return redirect()->back()->with('error', 'An error occurred while loading the login page.');
+            toastr()->error('An error occurred while loading the login page.');
+            return redirect()->back();
         }
     }
 
@@ -35,19 +36,18 @@ class LoginController extends Controller
     {
 
         try {
+
             $credentials = $request->validated();
 
             $result = $this->authService->attemptLogin($credentials);
 
             $request->session()->regenerate();
-
-            return redirect()->intended('home')
-                ->with('success', 'Welcome back, ' . $result['user']->name);
+            toastr()->success('Welcome back, ' . $result['user']->name);
+            return redirect()->intended('home');
         } catch (\Throwable $th) {
             Log::error('Login attempt error: ' . $th->getMessage());
-            return redirect()->back()
-                ->withInput($request->only('email'))
-                ->with('error', 'Login failed. Please check your credentials and try again.');
+            toastr()->error('Login failed. Please check your credentials and try again.');
+            return redirect()->back()->withInput($request->only('email'));
         }
     }
 
@@ -55,13 +55,12 @@ class LoginController extends Controller
     {
         try {
             $this->authService->logout($request);
-
-            return redirect()->route('login')
-                ->with('success', 'You have been logged out successfully.');
+            toastr()->success('You have been logged out successfully.');
+            return redirect()->route('login');
         } catch (\Throwable $th) {
             Log::error('Logout error: ' . $th->getMessage());
-            return redirect()->route('login')
-                ->with('error', 'An error occurred during logout.');
+            toastr()->error('An error occurred during logout.');
+            return redirect()->route('login');
         }
     }
 }

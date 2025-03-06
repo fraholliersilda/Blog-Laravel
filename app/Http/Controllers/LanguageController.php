@@ -28,12 +28,12 @@ class LanguageController extends Controller
             if (auth()->check()) {
                 auth()->user()->update(['language' => $lang]);
             }
-
-            return redirect()->back()->with('success', 'Language updated successfully.');
+            toastr()->success('Language updated successfully.');
+            return redirect()->back();
         } catch (\Throwable $th) {
             Log::error('Language switch error: ' . $th->getMessage());
-
-            return redirect()->back()->with('error', 'Failed to change language.');
+            toastr()->error('Failed to change language.');
+            return redirect()->back();
         }
     }
 }

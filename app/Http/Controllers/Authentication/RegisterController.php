@@ -32,14 +32,13 @@ class RegisterController extends Controller
             $validatedData = $request->validated();
 
             $user = $this->registerService->createUser($validatedData);
-
-            return redirect()->route('user.home')
-                ->with('success', 'Registration successful! Welcome, ' . $user->name);
+            toastr()->success('Registration successful! Welcome, ' . $user->name);
+            return redirect()->route('user.home');
         } catch (\Throwable $th) {
             Log::error('User registration error: ' . $th->getMessage());
+            toastr()->error('Registration failed. Please try again.');
             return redirect()->back()
-                ->withInput($request->except('password', 'password_confirmation'))
-                ->with('error', 'Registration failed. Please try again.');
+                ->withInput($request->except('password', 'password_confirmation'));
         }
     }
 }

@@ -22,7 +22,7 @@ class HomeController extends Controller
      */
     public function adminDashboard()
     {
-        return view('layouts.admin_dashboard'); // Your custom admin view
+        return view('layouts.admin_dashboard');
     }
 
     /**
@@ -32,6 +32,6 @@ class HomeController extends Controller
      */
     public function userDashboard()
     {
-        return view('layouts.user_dashboard'); // Your custom user view
+        return view('layouts.user_dashboard');
     }
 }

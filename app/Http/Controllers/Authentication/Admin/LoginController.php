@@ -38,14 +38,13 @@ class LoginController extends Controller
             $result = $this->authService->attemptAdminLogin($credentials);
 
             $request->session()->regenerate();
-
-            return redirect()->intended(route('admin.home'))
-                ->with('success', 'Welcome back, ' . $result['user']->name);
+            toastr()->success('Welcome back, ' . $result['user']->name);
+            return redirect()->intended(route('admin.home'));
         } catch (\Throwable $th) {
             Log::error('Admin login attempt error: ' . $th->getMessage());
+            toastr()->error('Admin login failed. Please check your credentials and try again.');
             return redirect()->back()
-                ->withInput($request->only('email'))
-                ->with('error', 'Admin login failed. Please check your credentials and try again.');
+                ->withInput($request->only('email'));
         }
     }
 
@@ -55,13 +54,12 @@ class LoginController extends Controller
 
         try {
             $this->authService->logout($request);
-
-            return redirect()->route('login')
-                ->with('success', 'You have been logged out successfully.');
+            toastr()->success('You have been logged out successfully.');
+            return redirect()->route('login');
         } catch (\Throwable $th) {
             Log::error('Admin logout error: ' . $th->getMessage());
-            return redirect()->route('login')
-                ->with('error', 'An error occurred during logout.');
+            toastr()->error('An error occurred during logout.');
+            return redirect()->route('login');
         }
     }
 }

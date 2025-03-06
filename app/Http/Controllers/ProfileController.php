@@ -44,50 +44,56 @@ class ProfileController extends Controller
     public function update(ProfileRequest $request)
     {
         try {
+            toastr()->success('Profile updated successfully.');
             $this->userService->update($request->validated());
-
-            return redirect()->route('profile.show')->with('success', 'Profile updated successfully.');
+            return redirect()->route('profile.show');
         } catch (\Throwable $th) {
+            toastr()->error('Failed to update profile. Please try again.');
             Log::error('Profile update error: ' . $th->getMessage());
-            return back()->with('error', 'Failed to update profile. Please try again.');
+            return back();
         }
     }
 
     public function updatePassword(UpdatePasswordRequest $request)
     {
         try {
+            toastr()->success('Password updated successfully.');
             $this->userService->updatePassword($request->password);
-            return redirect()->route('profile.show')->with('success', 'Password updated successfully.');
+            return redirect()->route('profile.show');
         } catch (\Throwable $th) {
+            toastr()->error('Failed to update password. Please try again.');
             Log::error('Password update error: ' . $th->getMessage());
-            return back()->with('error', 'Failed to update password. Please try again.');
+            return back();
         }
     }
 
     public function updatePicture(UpdateProfilePictureRequest $request)
     {
         try {
+            toastr()->success('Profile Picture updated successfully.');
             $this->mediaService->updateProfilePicture($request->file('profile_picture'));
 
-            return redirect()->route('profile.show')->with('success', 'Profile Picture updated successfully.');
+            return redirect()->route('profile.show');
         } catch (\Throwable $th) {
-            //throw $th;
+            toastr()->error('Failed to update profile picture.');
             Log::error('Profile picture update error: ' . $th->getMessage());
-            return back()->with('error', 'Failed to update profile picture.');
+            return back();
         }
     }
 
     public function delete()
     {
         try {
+            toastr()->success('Your profile has been deleted.');
             $userInfo = $this->userService->deleteAccount();
 
             Mail::to($userInfo)->send(new ProfileDeletedMail($userInfo['name']));
 
-            return redirect()->route('login')->with('success', 'Your profile has been deleted.');
+            return redirect()->route('login');
         } catch (\Throwable $th) {
+            toastr()->error('Failed to delete account. Please try again.');
             Log::error('Account deletion error: ' . $th->getMessage());
-            return back()->with('error', 'Failed to delete account. Please try again.');
+            return back();
         }
     }
 }

@@ -1,21 +1,13 @@
 <?php
 
 namespace App\Http\Controllers\backend;
-use App\DataTables\UsersDataTable;
-use App\Exports\UsersExport;
+
 use App\Http\Requests\ImportUsersRequest;
 use App\Http\Requests\NewUserRequest;
 use App\Http\Requests\UserRequest;
 use App\Http\Controllers\Controller;
-use App\Imports\UsersImport;
-use App\Models\User;
-use Auth;
-use Illuminate\Http\Request;
 use App\Services\UserService;
 use Illuminate\Support\Facades\Log;
-use Maatwebsite\Excel\Facades\Excel;
-use Yajra\DataTables\Services\DataTable;
-use Yajra\DataTables\Facades\DataTables;
 
 class UserController extends Controller
 {
