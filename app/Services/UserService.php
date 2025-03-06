@@ -1,10 +1,15 @@
 <?php
 
 namespace App\Services;
+use App\Exports\UsersExport;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\UsersImport;
+use Exception;
+use Illuminate\Http\UploadedFile;
 
 class UserService
 {
@@ -61,6 +66,15 @@ class UserService
             ->paginate($PerPage);
     }
 
+    public function getAllUsersExceptAdminAndCurrent()
+    {
+        return User::query()
+            ->where('role_id', '!=', 1)
+            ->where('id', '!=', Auth::id())
+            ->get();
+    }
+
+
     public function createUser(array $data)
     {
         $userData = [
@@ -90,15 +104,31 @@ class UserService
             'updated_at' => now(),
         ];
 
-        if (isset($data['role_id'])) {
-            $userData['role_id'] = $data['role_id'];
-        }
-
-        return DB::table('users')->where('id', $id)->update($userData) ? true : false;
+        return DB::table('users')->where('id', $id)->update($userData) > 0;
     }
 
     public function deleteUser(int $id)
     {
         return DB::table('users')->where('id', $id)->delete() ? true : false;
+    }
+
+    public function importUsers(UploadedFile $file): bool
+    {
+        try {
+            Excel::import(new UsersImport, $file);
+            return true;
+        } catch (Exception $e) {
+            \Log::error('User import failed: ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function exportUsers()
+    {
+        try {
+            return Excel::download(new UsersExport, 'users_downloaded.xlsx');
+        } catch (Exception $e) {
+            throw new Exception('Something went wrong during the export process.');
+        }
     }
 }
