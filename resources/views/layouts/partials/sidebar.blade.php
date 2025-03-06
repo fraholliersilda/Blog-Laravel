@@ -35,7 +35,7 @@
                 <li class="nav-item">
                     <a href="{{ route('users.index') }}" class="nav-link">
                         <i class="nav-icon bi bi-people"></i>
-                        <p>New All Users</p>
+                        <p>{{ __('app.all_users') }}</p>
                     </a>
                 </li>
             @endif

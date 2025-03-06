@@ -4,12 +4,12 @@
     <div class="container-fluid py-4">
         <div class="row mb-4">
             <div class="col-md-6">
-                <h1 class="display-5 fw-bold text-primary">Users Management</h1>
+                <h1 class="display-5 fw-bold text-primary">{{__('app.Users_Management')}}</h1>
             </div>
             <div class="col-md-6 text-md-end">
                 <button type="button" class="btn btn-primary btn-lg shadow" data-bs-toggle="modal"
                     data-bs-target="#addUserModal">
-                    <i class="bi bi-person-plus"></i> Add New User
+                    <i class="bi bi-person-plus"></i> {{__('app.add_new_user')}}
                 </button>
             </div>
         </div>
@@ -18,7 +18,7 @@
             <div class="col-12">
                 <div class="card border-0 shadow-sm">
                     <div class="card-header bg-light">
-                        <h5 class="card-title mb-0">Import Users</h5>
+                        <h5 class="card-title mb-0">{{__('app.import_users')}}</h5>
                     </div>
                     <div class="card-body">
                         <form action="{{ route('users.import') }}" method="POST" enctype="multipart/form-data"
@@ -28,10 +28,10 @@
                                 <div class="input-group">
                                     <input type="file" class="form-control" name="excel_file" id="excel_file" required>
                                     <button type="submit" class="btn btn-success">
-                                        <i class="bi bi-upload"></i> Upload
+                                        <i class="bi bi-upload"></i> {{__('app.upload')}}
                                     </button>
                                 </div>
-                                <small class="text-muted">Import users from Excel file</small>
+                                <small class="text-muted">{{__('app.import_users_from_excel_file')}}</small>
                             </div>
                         </form>
                     </div>
@@ -42,11 +42,11 @@
             <div class="col-12">
                 <div class="card border-0 shadow">
                     <div class="card-header bg-white border-bottom d-flex justify-content-between align-items-center py-3">
-                        <h3 class="card-title mb-0 text-primary">All Users</h3>
-                        <div class="col-md-11 text-md-end">
+                        <h3 class="card-title mb-0 text-primary">{{__('app.all_users')}}</h3>
+                        <div class="col-md-10 text-md-end">
                             <button type="button" class="btn btn-success btn-lg shadow"
                                 onclick="window.location.href='{{ route('users.export') }}'">
-                                <i class="bi bi-file-earmark-spreadsheet"></i> Download Users as Excel
+                                <i class="bi bi-file-earmark-spreadsheet"></i> {{__('app.excel_download')}}
                             </button>
                         </div>
 
@@ -56,13 +56,13 @@
                             <table id="users-table" class="table table-striped table-hover">
                                 <thead class="table-light">
                                     <tr>
-                                        <th class="fw-bold">Name</th>
+                                        <th class="fw-bold">{{__('app.name')}}</th>
                                         <th class="fw-bold">Email</th>
-                                        <th class="fw-bold text-center">Actions</th>
+                                        <th class="fw-bold text-center">{{__('app.actions')}}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <!-- Data will be loaded by DataTables -->
+                                    {{-- DataTable --}}
                                 </tbody>
                             </table>
                         </div>
@@ -78,7 +78,7 @@
             <div class="modal-content border-0 shadow">
                 <div class="modal-header bg-primary text-white">
                     <h5 class="modal-title" id="addUserModalLabel">
-                        <i class="bi bi-person-plus"></i> Add New User
+                        <i class="bi bi-person-plus"></i> {{__('app.add_new_user')}}
                     </h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
                         aria-label="Close"></button>
@@ -91,25 +91,25 @@
                                 <div class="form-floating mb-3">
                                     <input type="text" class="form-control" id="name" name="name" required
                                         placeholder="Enter name">
-                                    <label for="name">Full Name</label>
+                                    <label for="name">{{__('app.name')}}</label>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-floating mb-3">
                                     <input type="email" class="form-control" id="email" name="email" required
                                         placeholder="Enter email">
-                                    <label for="email">Email Address</label>
+                                    <label for="email">Email</label>
                                 </div>
                             </div>
                         </div>
 
                         <div class="form-floating mb-3">
                             <select class="form-select" id="role_id" name="role_id" required>
-                                <option value="">Select a role</option>
-                                <option value="2">User</option>
+                                <option value="">{{__('app.select_role')}}</option>
+                                <option value="2">{{__('app.user')}}</option>
                                 <option value="1">Admin</option>
                             </select>
-                            <label for="role_id">User Role</label>
+                            <label for="role_id">{{__('app.role')}}</label>
                         </div>
 
                         <div class="row g-3">
@@ -118,24 +118,24 @@
                                     <input type="password" class="form-control" id="password" name="password" required
                                         placeholder="Enter password">
                                     <label for="password">Password</label>
-                                    <div class="form-text">Password must be at least 8 characters</div>
+                                    <div class="form-text">{{__('app.password_8ch')}}</div>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-floating mb-3">
                                     <input type="password" class="form-control" id="password_confirmation"
                                         name="password_confirmation" required placeholder="Re-enter password">
-                                    <label for="password_confirmation">Confirm Password</label>
+                                    <label for="password_confirmation">{{__('app.confirm_password')}}</label>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer bg-light">
                         <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-                            <i class="bi bi-x-circle"></i> Cancel
+                            <i class="bi bi-x-circle"></i> {{__('app.cancel')}}
                         </button>
                         <button type="submit" class="btn btn-primary">
-                            <i class="bi bi-save"></i> Save User
+                            <i class="bi bi-save"></i>{{__('app.save_user')}}
                         </button>
                     </div>
                 </form>

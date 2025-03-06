@@ -37,4 +37,24 @@ return [
     //admin dashboard
     'review_users'=>'Review Users',
     'want_to_review_users'=>'Want to review users?',
+
+    //users management
+    'Users_Management'=> 'Users Management',
+    'add_new_user'=> 'Add New User',
+    'import_users'=> 'Import Users',
+    'upload'=> 'Upload',
+    'import_users_from_excel_file'=> 'Import users from Excel file',
+    'excel_download'=> 'Download Users as Excel',
+    'actions' => 'Actions',
+    'role'=> 'role',
+    'select_role' => 'Select a role',
+    'user'=> 'User',
+    'password_8ch'=> 'Password must be at least 8 characters',
+    'cancel'=> 'Cancel',
+    'save_user' => 'Save User',
+    'edit'=> 'Edit',
+    'delete' => 'Delete',
+    'update'=> 'Update',
+    'sure_to_delete'=> 'Are you sure you want to delete the user:',
+    'cannot_undone'=> 'This action cannot be undone.',
 ];

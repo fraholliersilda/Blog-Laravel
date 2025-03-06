@@ -37,5 +37,26 @@ return [
     //Paneli i Administratorit
     'review_users'=>'Rishiko Përdoruesit',
     'want_to_review_users'=>'Dëshironi të rishikoni përdoruesit?',
+
+    //Users management
+    'Users_Management'=> 'Menaxhimi i perdoruesve',
+    'add_new_user'=> 'Shto Perdorues te Ri',
+    'import_users'=> 'Importo Perdoruesit',
+    'upload'=> 'Shto',
+    'import_users_from_excel_file'=> 'Importo perdoruesit nga nje file exceli',
+    'excel_download'=> 'Shkarko Perdoruesit si Excel',
+    'actions' => 'Veprime',
+    'role' => 'Roli',
+    'select_role' => 'Zgjidh nje rol',
+    'user'=> 'Perdorues',
+    'password_8ch'=> 'Password duhet te jete minimalisht 8 karaktere',
+    'cancel'=> 'Anullo',
+    'save_user' => 'Ruaj Perdoruesin',
+    'edit'=> 'Edito',
+    'delete' => 'Fshi',
+    'update'=> 'Perditeso',
+    'sure_to_delete'=> 'Jeni te sigurt qe deshironi te fshini perdoruesin:',
+    'cannot_undone'=> 'Ky veprim nuk ka kthim mbrapa.',
+
 ];
 
