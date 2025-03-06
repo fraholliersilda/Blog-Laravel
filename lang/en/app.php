@@ -57,4 +57,6 @@ return [
     'update'=> 'Update',
     'sure_to_delete'=> 'Are you sure you want to delete the user:',
     'cannot_undone'=> 'This action cannot be undone.',
+    'select_excel_file'=> 'Select Excel file',
+
 ];

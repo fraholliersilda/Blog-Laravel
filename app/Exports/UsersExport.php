@@ -13,8 +13,18 @@ class UsersExport implements FromCollection, WithHeadings, WithTitle
      */
     public function collection()
     {
-        return User::select('name', 'email', 'role_id')->get();
+        return User::select('name', 'email', 'role_id')
+            ->with('role')
+            ->get()
+            ->map(function ($user) {
+                return [
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'role' => $user->role->name,
+                ];
+            });
     }
+
 
     /**
      * @return array

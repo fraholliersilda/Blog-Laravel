@@ -7,49 +7,28 @@
                 <h1 class="display-5 fw-bold text-primary">{{__('app.Users_Management')}}</h1>
             </div>
             <div class="col-md-6 text-md-end">
-                <button type="button" class="btn btn-primary btn-lg shadow" data-bs-toggle="modal"
+                <button type="button" class="btn btn-primary btn-lg shadow me-2" data-bs-toggle="modal"
                     data-bs-target="#addUserModal">
                     <i class="bi bi-person-plus"></i> {{__('app.add_new_user')}}
+                </button>
+                <button type="button" class="btn btn-info btn-lg shadow" data-bs-toggle="modal"
+                    data-bs-target="#importUsersModal">
+                    <i class="bi bi-file-earmark-excel"></i> {{__('app.import_users')}}
                 </button>
             </div>
         </div>
 
-        <div class="row mb-4">
-            <div class="col-12">
-                <div class="card border-0 shadow-sm">
-                    <div class="card-header bg-light">
-                        <h5 class="card-title mb-0">{{__('app.import_users')}}</h5>
-                    </div>
-                    <div class="card-body">
-                        <form action="{{ route('users.import') }}" method="POST" enctype="multipart/form-data"
-                            class="row g-3 align-items-center">
-                            @csrf
-                            <div class="col-md-8">
-                                <div class="input-group">
-                                    <input type="file" class="form-control" name="excel_file" id="excel_file" required>
-                                    <button type="submit" class="btn btn-success">
-                                        <i class="bi bi-upload"></i> {{__('app.upload')}}
-                                    </button>
-                                </div>
-                                <small class="text-muted">{{__('app.import_users_from_excel_file')}}</small>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
         <div class="row">
             <div class="col-12">
                 <div class="card border-0 shadow">
                     <div class="card-header bg-white border-bottom d-flex justify-content-between align-items-center py-3">
                         <h3 class="card-title mb-0 text-primary">{{__('app.all_users')}}</h3>
-                        <div class="col-md-10 text-md-end">
-                            <button type="button" class="btn btn-success btn-lg shadow"
+                        <div class="col-md-10 text-md-start">
+                            <button type="button" class="btn btn-success btn-sm shadow "
                                 onclick="window.location.href='{{ route('users.export') }}'">
                                 <i class="bi bi-file-earmark-spreadsheet"></i> {{__('app.excel_download')}}
                             </button>
                         </div>
-
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
@@ -135,7 +114,40 @@
                             <i class="bi bi-x-circle"></i> {{__('app.cancel')}}
                         </button>
                         <button type="submit" class="btn btn-primary">
-                            <i class="bi bi-save"></i>{{__('app.save_user')}}
+                            <i class="bi bi-save"></i> {{__('app.save_user')}}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Import Users Modal -->
+    <div class="modal fade" id="importUsersModal" tabindex="-1" aria-labelledby="importUsersModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-header bg-info text-white">
+                    <h5 class="modal-title" id="importUsersModalLabel">
+                        <i class="bi bi-file-earmark-excel"></i> {{__('app.import_users')}}
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <form action="{{ route('users.import') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <div class="modal-body p-4">
+                        <div class="mb-3">
+                            <label for="excel_file" class="form-label">{{__('app.select_excel_file')}}</label>
+                            <input type="file" class="form-control" name="excel_file" id="excel_file" required>
+                            <div class="form-text">{{__('app.import_users_from_excel_file')}}</div>
+                        </div>
+                    </div>
+                    <div class="modal-footer bg-light">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                            <i class="bi bi-x-circle"></i> {{__('app.cancel')}}
+                        </button>
+                        <button type="submit" class="btn btn-info">
+                            <i class="bi bi-upload"></i> {{__('app.upload')}}
                         </button>
                     </div>
                 </form>
@@ -189,7 +201,7 @@
                     ]
                 });
 
-                // Handle edit user click
+                // edit user
                 $(document).on('click', '.edit-btn', function() {
                     let id = $(this).data('id');
                     let name = $(this).data('name');
@@ -202,7 +214,7 @@
                     $('#editUserModal').modal('show');
                 });
 
-                // Handle delete user click
+                // delete user
                 $(document).on('click', '.delete-btn', function() {
                     let id = $(this).data('id');
                     let name = $(this).data('name');

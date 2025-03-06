@@ -22,14 +22,12 @@ class NewUserRequest extends FormRequest
      */
     public function rules(): array
     {
-        $userId = $this->route('id');
-
         return [
             'name' => 'required|string|max:255',
             'email' => [
                 'required',
                 'email',
-                Rule::unique('users', 'email')->ignore($userId)
+                'unique:users,email,NULL,id,deleted_at,NULL'  
             ],
             'role_id' => [
                 'required',

@@ -57,6 +57,7 @@ return [
     'update'=> 'Perditeso',
     'sure_to_delete'=> 'Jeni te sigurt qe deshironi te fshini perdoruesin:',
     'cannot_undone'=> 'Ky veprim nuk ka kthim mbrapa.',
+    'select_excel_file'=> 'Zgjidh dokumentin Excel',
 
 ];
 

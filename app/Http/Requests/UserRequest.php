@@ -21,16 +21,21 @@ class UserRequest extends FormRequest
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array
-    {
-        $userId = $this->route('id');
+{
+    $userId = $this->route('id');
 
-        return [
-            'name' => 'required|string|max:255',
-            'email' => [
-                'required',
-                'email',
-                Rule::unique('users', 'email')->ignore($userId)
-            ],
-        ];
-    }
+    return [
+        'name' => 'required|string|max:255',
+        'email' => [
+            'required',
+            'email',
+            Rule::unique('users')->ignore($userId)->whereNull('deleted_at')
+        ],
+        'role_id' => [
+            'sometimes',
+            'required',
+            'exists:roles,id',
+        ],
+    ];
+}
 }

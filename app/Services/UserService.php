@@ -70,46 +70,52 @@ class UserService
     {
         return User::query()
             ->where('role_id', '!=', 1)
-            ->where('id', '!=', Auth::id())
-            ->get();
+            ->where('id', '!=', Auth::id());
     }
-
 
     public function createUser(array $data)
     {
+        $trashedUser = User::onlyTrashed()->where('email', $data['email'])->first();
+
+        if ($trashedUser) {
+            $trashedUser->forceDelete();
+        }
+
         $userData = [
             'name' => $data['name'],
             'email' => $data['email'],
             'role_id' => $data['role_id'],
             'password' => Hash::make($data['password']),
-            'language' => 'en',
+            'language' => $data['language'] ?? 'en',
             'created_at' => now(),
             'updated_at' => now(),
         ];
 
-        return DB::table('users')->insert($userData);
+        // Use the Eloquent model instead of DB facade
+        return User::create($userData) ? true : false;
     }
 
     public function getUserById(int $id)
     {
-        return DB::table('users')->where('id', $id)->first();
+        return User::findOrFail($id);
     }
 
 
     public function updateUser(int $id, array $data)
     {
-        $userData = [
+        $user = User::findOrFail($id);
+        return $user->update([
             'name' => $data['name'],
             'email' => $data['email'],
             'updated_at' => now(),
-        ];
-
-        return DB::table('users')->where('id', $id)->update($userData) > 0;
+        ]);
     }
+
 
     public function deleteUser(int $id)
     {
-        return DB::table('users')->where('id', $id)->delete() ? true : false;
+        $user = User::findOrFail($id);
+        return $user->delete();
     }
 
     public function importUsers(UploadedFile $file): bool

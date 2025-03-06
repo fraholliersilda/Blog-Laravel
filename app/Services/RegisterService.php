@@ -31,9 +31,15 @@ class RegisterService
             return back()->withErrors(['role' => 'Could not retrieve the default user role.']);
         }
 
-        if (User::where('email', $data['email'])->exists()) {
-            return back()->withErrors(['email' => 'This email is already in use.']);
+        $existingUser = User::withTrashed()->where('email', $data['email'])->first();
+
+        if ($existingUser) {
+            if ($existingUser->trashed()) {
+                $existingUser ->forceDelete();
+        }else{
+            return back()->withErrors(['email'=>'This email is already in use']);
         }
+    }
 
         return DB::transaction(function () use ($data, $role) {
             $user = User::create([

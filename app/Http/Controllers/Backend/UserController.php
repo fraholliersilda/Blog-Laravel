@@ -6,6 +6,7 @@ use App\Http\Requests\ImportUsersRequest;
 use App\Http\Requests\NewUserRequest;
 use App\Http\Requests\UserRequest;
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use App\Services\UserService;
 use Illuminate\Support\Facades\Log;
 
