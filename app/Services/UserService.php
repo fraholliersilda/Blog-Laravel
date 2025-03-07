@@ -91,7 +91,6 @@ class UserService
             'updated_at' => now(),
         ];
 
-        // Use the Eloquent model instead of DB facade
         return User::create($userData) ? true : false;
     }
 
