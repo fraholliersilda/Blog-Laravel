@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Authentication\{LoginController, RegisterController, PasswordController};
 use App\Http\Controllers\Backend\{PostCrudController, UserController};
-use App\Http\Controllers\{ProfileController, PostController};
+use App\Http\Controllers\{ProfileController, PostController, ApiKeyController};
 
 Route::get('/', function () {
     return view('welcome');
@@ -47,6 +47,12 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::delete('/delete-user/{id}', [UserController::class, 'deleteUser'])->name('deleteUser');
 
     Route::get('/admin/home', [App\Http\Controllers\HomeController::class, 'adminDashboard'])->name('admin.home');
+
+    //api keys
+    Route::resource('api-keys', ApiKeyController::class)->only([
+        'index', 'store', 'destroy'
+    ]);
+
 });
 
 Route::middleware(['auth', 'role:user'])->group(function () {

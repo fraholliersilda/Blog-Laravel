@@ -16,30 +16,31 @@
             <!--begin::Sidebar Menu-->
             <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="menu" data-accordion="false">
                 <li class="nav-item">
-                    <a href="admin/home" class="nav-link ">
+                    <a href="{{route ('admin.home')}}" class="nav-link ">
                         <i class="nav-icon bi bi-speedometer"></i>
                         <p>
                             {{ __('app.dashboard') }}
                         </p>
                     </a>
                 </li>
-                @if (auth()->user()->role->name === 'admin')
-                    <li class="nav-item">
-                        <a href="{{ route('alluser') }}" class="nav-link">
-                            <i class="nav-icon bi bi-people"></i>
-                            <p>{{ __('app.all_users') }}</p>
-                        </a>
-                    </li>
-                @endif
-                @if (auth()->user()->role->name === 'admin')
+                <li class="nav-item">
+                    <a href="{{ route('alluser') }}" class="nav-link">
+                        <i class="nav-icon bi bi-people"></i>
+                        <p>{{ __('app.all_users') }}</p>
+                    </a>
+                </li>
                 <li class="nav-item">
                     <a href="{{ route('users.index') }}" class="nav-link">
                         <i class="nav-icon bi bi-people"></i>
                         <p>{{ __('app.all_users') }}</p>
                     </a>
                 </li>
-            @endif
-
+                <li class="nav-item">
+                    <a href="{{ route('api-keys.index') }}" class="nav-link ">
+                        <i class="nav-icon bi bi-key"></i>
+                        <p>API Keys</p>
+                    </a>
+                </li>
                 {{-- @if (auth()->user()->role->name === 'admin')
                 <li class="nav-item">
                     <a href="#" class="nav-link">
