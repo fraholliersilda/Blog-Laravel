@@ -12,7 +12,7 @@ class ApiKeyService{
 
     public function getUserApiKeys()
     {
-        return ApiKey::where("user_id", Auth::user()->id)->get();
+        return ApiKey::where("user_id", Auth::id())->get();
     }
 
     public function createApiKey(array $data)

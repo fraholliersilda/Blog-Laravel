@@ -1,6 +1,4 @@
 <?php
-// app/Http/Controllers/PayPalController.php
-
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -55,6 +53,8 @@ class PayPalController extends Controller
                 ]
             ]);
 
+            Log::info('PayPal Order Response: ' . json_encode($response)); // ADD THIS
+
             if (isset($response['id']) && $response['id'] != null) {
                 session([
                     'paypal_order_id' => $response['id'],
@@ -79,6 +79,7 @@ class PayPalController extends Controller
         }
     }
 
+
     public function paymentSuccess(Request $request)
     {
         $orderId = session('paypal_order_id');
@@ -91,6 +92,7 @@ class PayPalController extends Controller
 
         try {
             $response = $this->provider->capturePaymentOrder($orderId);
+            Log::info('PayPal Capture Response: ' . json_encode($response));
 
             if (isset($response['status']) && $response['status'] == 'COMPLETED') {
                 $apiKey = $this->generateApiKey($plan, $response);
@@ -107,6 +109,7 @@ class PayPalController extends Controller
             return redirect()->route('api-keys.purchase')->with('error', 'An error occurred finalizing your payment. Please contact support.');
         }
     }
+
 
     public function paymentCancel()
     {

@@ -89,7 +89,7 @@
                         </div>
 
                         <div class="text-center mt-4">
-                            <p>Already have an account? <a href="{{ route('login') }}">Log in</a> to manage your API keys.</p>
+                            <p>Want to go back to login? <a href="{{ route('login') }}">Click here</a> </p>
                         </div>
                     </div>
                 </div>

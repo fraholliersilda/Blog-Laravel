@@ -42,16 +42,6 @@
 
                         <div class="d-grid gap-2 mt-4">
                             <a href="{{ route('api-keys.purchase') }}" class="btn btn-primary">Return to Purchase Page</a>
-                            <div class="card mt-3">
-                                <div class="card-body">
-                                    <h5 class="card-title">Want to manage your API key?</h5>
-                                    <p class="card-text">Create an account to keep track of your API usage, update your credentials, and purchase additional keys.</p>
-                                    <div class="d-grid">
-                                        <a href="{{ route('register') }}" class="btn btn-outline-primary">Create an Account</a>
-                                    </div>
-                                    <p class="text-muted small mt-2">Already have an account? <a href="{{ route('login') }}">Log in</a></p>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>

@@ -69,13 +69,13 @@ class ApiKeyController extends Controller
 
     public function showPurchaseSuccess(Request $request)
     {
-        $apiKey = $request->key;
+        $apiKey = request()->query('key');
 
         if (!$apiKey) {
             return redirect()->route('api-keys.purchase');
         }
 
-        return view('api-keys.purchase-success', compact('apiKey'));
+        return view('api-keys.success', compact('apiKey'));
     }
 
 }
