@@ -5,9 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreApiKeyRequest;
 use App\Models\ApiKey;
 use App\Services\ApiKeyService;
-use Auth;
-use Illuminate\Http\Request;
 use Log;
+use Request;
 
 class ApiKeyController extends Controller
 {
@@ -61,5 +60,22 @@ class ApiKeyController extends Controller
         }
     }
 
+    public function showPurchasePage()
+    {
+
+        return view('api-keys.purchase');
+    }
+
+
+    public function showPurchaseSuccess(Request $request)
+    {
+        $apiKey = $request->key;
+
+        if (!$apiKey) {
+            return redirect()->route('api-keys.purchase');
+        }
+
+        return view('api-keys.purchase-success', compact('apiKey'));
+    }
 
 }

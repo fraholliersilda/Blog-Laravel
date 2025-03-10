@@ -9,6 +9,13 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/api-keys/purchase', [App\Http\Controllers\ApiKeyController::class, 'showPurchasePage'])->name('api-keys.purchase');
+Route::get('/api-keys/purchase/success', [App\Http\Controllers\ApiKeyController::class, 'showPurchaseSuccess'])->name('api-keys.purchase.success');
+
+// PayPal Routes
+Route::post('/paypal/process', [App\Http\Controllers\PayPalController::class, 'processPayment'])->name('paypal.process');
+Route::get('/paypal/success', [App\Http\Controllers\PayPalController::class, 'paymentSuccess'])->name('paypal.success');
+Route::get('/paypal/cancel', [App\Http\Controllers\PayPalController::class, 'paymentCancel'])->name('paypal.cancel');
 
 Route::middleware(['guest'])->group(function () {
     // Admin Registration
