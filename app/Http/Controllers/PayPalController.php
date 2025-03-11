@@ -19,8 +19,10 @@ class PayPalController extends Controller
     {
         $plan = $request->plan;
         $amount = $request->amount;
+        $email = $request->email;
         $returnUrl = route('paypal.success');
         $cancelUrl = route('paypal.cancel');
+
 
         try {
             $response = $this->paypalService->createOrder($plan, $amount, $returnUrl, $cancelUrl);
@@ -30,6 +32,7 @@ class PayPalController extends Controller
                     'paypal_order_id' => $response['id'],
                     'plan' => $plan,
                     'amount' => $amount,
+                    'buyer_email' => $email,
                 ]);
 
                 foreach ($response['links'] as $link) {
@@ -56,6 +59,7 @@ class PayPalController extends Controller
         $orderId = session('paypal_order_id');
         $plan = session('plan');
         $amount = session('amount');
+        $email = session('buyer_email');
 
         if (!$orderId) {
             toastr()->error('Payment information not found.');
@@ -66,9 +70,9 @@ class PayPalController extends Controller
             $response = $this->paypalService->capturePayment($orderId);
 
             if (isset($response['status']) && $response['status'] == 'COMPLETED') {
-                $apiKey = $this->paypalService->generateApiKey($plan, $response, $amount);
+                $apiKey = $this->paypalService->generateApiKey($plan, $response, $amount, $email);
 
-                session()->forget(['paypal_order_id', 'plan', 'amount']);
+                session()->forget(['paypal_order_id', 'plan', 'amount', 'email']);
 
                 toastr()->success('Payment completed successfully! Your API key has been generated.');
                 return redirect()->route('api-keys.purchase.success', ['key' => $apiKey->key]);

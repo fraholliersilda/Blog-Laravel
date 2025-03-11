@@ -134,29 +134,12 @@
                         return false;
                     }
 
-                    // Set the email value to the appropriate hidden input field based on the plan
                     if (this.getAttribute('data-plan') === 'basic') {
                         basicEmailInput.value = emailValue;
                     } else if (this.getAttribute('data-plan') === 'premium') {
                         premiumEmailInput.value = emailValue;
                     }
 
-                    // Optionally, you can make an API call to verify the email before proceeding
-                    fetch(`/api/users?email=${emailValue}`)
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                // If the email is valid, submit the form (you can also trigger the form submission here)
-                                this.closest('form').submit();
-                            } else {
-                                e.preventDefault();
-                                alert(data.message || 'Invalid email or user not found.');
-                            }
-                        })
-                        .catch(error => {
-                            e.preventDefault();
-                            alert('There was an error verifying your email. Please try again.');
-                        });
                 });
             });
         });
