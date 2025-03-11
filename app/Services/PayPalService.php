@@ -63,16 +63,17 @@ class PayPalService
         }
     }
 
-    public function generateApiKey($plan, $paymentResponse, $amount)
+    public function generateApiKey($plan, $paymentResponse, $amount, $email = null)
     {
         $apiKeyData = [
             'name' => 'PayPal Purchase - ' . ucfirst($plan) . ' Plan',
             'plan' => $plan,
+            'email' => $email,
         ];
 
         $apiKey = $this->apiKeyService->createApiKeyNoUser($apiKeyData);
 
-        $payerEmail = $paymentResponse['payer']['email_address'] ?? null;
+        $payerEmail = $email ?? $paymentResponse['payer']['email_address'] ?? null;
 
         Payment::create([
             'amount' => $amount,

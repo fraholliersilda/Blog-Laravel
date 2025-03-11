@@ -11,7 +11,7 @@ class ApiKeyService{
 
     public function getUserApiKeys()
     {
-        return ApiKey::where("user_id", Auth::id())->get();
+        return ApiKey::all();
     }
 
     public function createApiKey(array $data)
@@ -21,6 +21,7 @@ class ApiKeyService{
             'key' => ApiKey::generateKey(),
             'user_id' => Auth::id(),
             'expires_at' => $data['expires_at'] ?? null,
+            'email' => Auth::check() ? Auth::user()->email : $data['email'],
         ]);
     }
 
@@ -37,6 +38,7 @@ class ApiKeyService{
             'key' => $key,
             'name' => $data['name'] ?? 'API Key',
             'user_id' => null,
+            'email' => $data['email'] ?? null,
             'plan' => $data['plan'] ?? 'basic',
             'is_active' => true,
             'expires_at' => now()->addMonth(),
@@ -44,5 +46,10 @@ class ApiKeyService{
         ]);
 
         return $apiKey;
+    }
+
+    public function findApiKeysByEmail($email)
+    {
+        return ApiKey::byEmail($email)->get();
     }
 }

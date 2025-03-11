@@ -99,6 +99,9 @@ class UserService
         return User::findOrFail($id);
     }
 
+    public function getUserByEmail($email)
+    {       return User::where('email', $email)->first();
+    }
 
     public function updateUser(int $id, array $data)
     {

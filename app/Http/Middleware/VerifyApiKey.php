@@ -2,10 +2,12 @@
 
 namespace App\Http\Middleware;
 
+use App;
 use App\Models\ApiKey;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Log;
 
 class VerifyApiKey
 {
@@ -16,7 +18,7 @@ class VerifyApiKey
         if (!$bearerToken) {
             return response()->json([
                 'message' => 'Unauthorized. API key is missing.'
-            ], Response::HTTP_UNAUTHORIZED);
+            ], Response::HTTP_FORBIDDEN);
         }
 
         $apiKey = ApiKey::where('key', $bearerToken)->first();
@@ -24,16 +26,16 @@ class VerifyApiKey
         if (!$apiKey || !$apiKey->isValid()) {
             return response()->json([
                 'message' => 'Unauthorized. Invalid API key.'
-            ], Response::HTTP_UNAUTHORIZED);
+            ], Response::HTTP_FORBIDDEN);
         }
 
         try {
             $apiKey->last_used_at = now();
             $apiKey->save();
 
-            \Illuminate\Support\Facades\Log::info('API key ' . $apiKey->id . ' marked as used at ' . now());
+            Log::info('API key ' . $apiKey->id . ' marked as used at ' . now());
         } catch (\Exception $e) {
-            \Illuminate\Support\Facades\Log::error('Failed to update API key last_used_at: ' . $e->getMessage());
+            Log::error('Failed to update API key last_used_at: ' . $e->getMessage());
         }
 
         $request->setUserResolver(function () use ($apiKey) {

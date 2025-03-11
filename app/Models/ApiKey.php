@@ -17,6 +17,7 @@ class ApiKey extends Model
         'user_id',
         'expires_at',
         'last_used_at',
+        'email',
     ];
 
     protected $casts = [
@@ -47,5 +48,10 @@ class ApiKey extends Model
         $this->update([
             'last_used_at' => now(),
         ]);
+    }
+
+    public function scopeByEmail($query, $email)
+    {
+        return $query->where('email', $email);
     }
 }

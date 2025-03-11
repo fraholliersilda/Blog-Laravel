@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
-use App\Http\Resources\UserCollection;
 use App\Models\User;
 use App\Services\UserService;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,16 +18,26 @@ class UserApiController extends Controller
         $this->userService = $userService;
     }
 
-    /**
-     * Get all users (except admin users)
-     *
-     * @return \Illuminate\Http\JsonResponse|\App\Http\Resources\UserCollection
-     */
     public function index()
     {
         try {
+            $email = request()->query('email');
+
+            if ($email) {
+                $users = $this->userService->getUserByEmail($email);
+
+                if (!$users) {
+                    return response()->json([
+                        'message' => 'User not found',
+                    ], Response::HTTP_NOT_FOUND);
+                }
+
+                return new UserResource($users);
+            }
+
             $users = $this->userService->getAllUsersExceptAdminAndCurrent();
-            return new UserCollection($users->get());
+            return UserResource::collection($users->paginate(10));
+
         } catch (\Throwable $th) {
             Log::error('API - Error fetching users: ' . $th->getMessage());
             return response()->json([
@@ -38,12 +47,6 @@ class UserApiController extends Controller
         }
     }
 
-    /**
-     * Get user by ID
-     *
-     * @param int $id
-     * @return \Illuminate\Http\JsonResponse|\App\Http\Resources\UserResource
-     */
     public function show($id)
     {
         try {

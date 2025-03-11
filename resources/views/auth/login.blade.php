@@ -39,7 +39,13 @@
 
             <div class="card-header">
                 <h1 class="mb-0 text-center"><b>LogIn</b></h1>
-                </a>
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <div class="d-grid gap-2 ">
+                            <a href="{{ route('api-keys.purchase') }}" class="btn btn-success ">Purchase API Key</a>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="card-body login-card-body">
 

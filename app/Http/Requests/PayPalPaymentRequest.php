@@ -24,6 +24,7 @@ class PayPalPaymentRequest extends FormRequest
         return [
             'plan' => 'required|in:basic,premium',
             'amount' => 'required|numeric',
+            'email'=> 'required|email',
         ];
     }
 }

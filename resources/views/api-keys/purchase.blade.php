@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,6 +9,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
 </head>
+
 <body>
     <div class="container py-5">
         <div class="row justify-content-center">
@@ -17,13 +19,13 @@
                         <h3 class="mb-0">Purchase API Key</h3>
                     </div>
                     <div class="card-body">
-                        @if(session('success'))
+                        @if (session('success'))
                             <div class="alert alert-success">
                                 {{ session('success') }}
                             </div>
                         @endif
 
-                        @if(session('error'))
+                        @if (session('error'))
                             <div class="alert alert-danger">
                                 {{ session('error') }}
                             </div>
@@ -40,8 +42,18 @@
                                         <li class="list-group-item">Unlimited API calls</li>
                                         <li class="list-group-item">Access to all endpoints</li>
                                         <li class="list-group-item">24/7 technical support</li>
-                                        <li class="list-group-item">API documentation</li>
                                     </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <h5 class="card-title">Your Contact Information</h5>
+                                <div class="mb-3">
+                                    <label for="email" class="form-label">Email Address</label>
+                                    <input type="email" class="form-control" id="email" name="email" required>
+                                    <small class="text-muted">For account identification and support purposes</small>
                                 </div>
                             </div>
                         </div>
@@ -54,14 +66,18 @@
                                         <h2 class="my-3">$19.99</h2>
                                         <p class="card-text">Monthly subscription</p>
                                         <ul class="list-unstyled text-start mb-4">
-                                            <li><i class="bi bi-check-circle-fill text-success me-2"></i> 1,000 requests/day</li>
-                                            <li><i class="bi bi-check-circle-fill text-success me-2"></i> Basic support</li>
+                                            <li><i class="bi bi-check-circle-fill text-success me-2"></i> 1,000
+                                                requests/day</li>
+                                            <li><i class="bi bi-check-circle-fill text-success me-2"></i> Basic support
+                                            </li>
                                         </ul>
                                         <form action="{{ route('paypal.process') }}" method="POST">
                                             @csrf
                                             <input type="hidden" name="plan" value="basic">
                                             <input type="hidden" name="amount" value="19.99">
-                                            <button type="submit" class="btn btn-primary">Purchase Now</button>
+                                            <input type="hidden" name="email" id="basic-email">
+                                            <button type="submit" class="btn btn-primary purchase-btn"
+                                                data-plan="basic">Purchase Now</button>
                                         </form>
                                     </div>
                                 </div>
@@ -73,15 +89,18 @@
                                         <h2 class="my-3">$49.99</h2>
                                         <p class="card-text">Monthly subscription</p>
                                         <ul class="list-unstyled text-start mb-4">
-                                            <li><i class="bi bi-check-circle-fill text-success me-2"></i> Unlimited requests</li>
-                                            <li><i class="bi bi-check-circle-fill text-success me-2"></i> Priority support</li>
-                                            <li><i class="bi bi-check-circle-fill text-success me-2"></i> Advanced features</li>
+                                            <li><i class="bi bi-check-circle-fill text-success me-2"></i> Unlimited
+                                                requests</li>
+                                            <li><i class="bi bi-check-circle-fill text-success me-2"></i> Priority
+                                                support</li>
                                         </ul>
                                         <form action="{{ route('paypal.process') }}" method="POST">
                                             @csrf
                                             <input type="hidden" name="plan" value="premium">
                                             <input type="hidden" name="amount" value="49.99">
-                                            <button type="submit" class="btn btn-primary">Purchase Now</button>
+                                            <input type="hidden" name="email" id="premium-email">
+                                            <button type="submit" class="btn btn-primary purchase-btn"
+                                                data-plan="premium">Purchase Now</button>
                                         </form>
                                     </div>
                                 </div>
@@ -98,5 +117,51 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const emailInput = document.getElementById('email');
+            const basicEmailInput = document.getElementById('basic-email');
+            const premiumEmailInput = document.getElementById('premium-email');
+            const purchaseButtons = document.querySelectorAll('.purchase-btn');
+
+            purchaseButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    const emailValue = emailInput.value.trim();
+                    if (!emailValue) {
+                        e.preventDefault();
+                        alert('Please enter your email address');
+                        emailInput.focus();
+                        return false;
+                    }
+
+                    // Set the email value to the appropriate hidden input field based on the plan
+                    if (this.getAttribute('data-plan') === 'basic') {
+                        basicEmailInput.value = emailValue;
+                    } else if (this.getAttribute('data-plan') === 'premium') {
+                        premiumEmailInput.value = emailValue;
+                    }
+
+                    // Optionally, you can make an API call to verify the email before proceeding
+                    fetch(`/api/users?email=${emailValue}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                // If the email is valid, submit the form (you can also trigger the form submission here)
+                                this.closest('form').submit();
+                            } else {
+                                e.preventDefault();
+                                alert(data.message || 'Invalid email or user not found.');
+                            }
+                        })
+                        .catch(error => {
+                            e.preventDefault();
+                            alert('There was an error verifying your email. Please try again.');
+                        });
+                });
+            });
+        });
+    </script>
+
 </body>
+
 </html>
