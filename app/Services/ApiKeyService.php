@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Models\ApiKey;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 

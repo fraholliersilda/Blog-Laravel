@@ -2,20 +2,21 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Authentication\{LoginController, RegisterController, PasswordController};
-use App\Http\Controllers\Backend\{PostCrudController, UserController};
-use App\Http\Controllers\{ProfileController, PostController, ApiKeyController};
+use App\Http\Controllers\Backend\UserController;
+use App\Http\Controllers\{HomeController, ProfileController, LanguageController, ApiKeyController, PayPalController};
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/api-keys/purchase', [App\Http\Controllers\ApiKeyController::class, 'showPurchasePage'])->name('api-keys.purchase');
-Route::get('/api-keys/purchase/success', [App\Http\Controllers\ApiKeyController::class, 'showPurchaseSuccess'])->name('api-keys.purchase.success');
+//Api Key purchased using paypal
+Route::get('/api-keys/purchase', [ApiKeyController::class, 'showPurchasePage'])->name('api-keys.purchase');
+Route::get('/api-keys/purchase/success', [ApiKeyController::class, 'showPurchaseSuccess'])->name('api-keys.purchase.success');
 
 // PayPal Routes
-Route::post('/paypal/process', [App\Http\Controllers\PayPalController::class, 'processPayment'])->name('paypal.process');
-Route::get('/paypal/success', [App\Http\Controllers\PayPalController::class, 'paymentSuccess'])->name('paypal.success');
-Route::get('/paypal/cancel', [App\Http\Controllers\PayPalController::class, 'paymentCancel'])->name('paypal.cancel');
+Route::post('/paypal/process', [PayPalController::class, 'processPayment'])->name('paypal.process');
+Route::get('/paypal/success', [PayPalController::class, 'paymentSuccess'])->name('paypal.success');
+Route::get('/paypal/cancel', [PayPalController::class, 'paymentCancel'])->name('paypal.cancel');
 
 Route::middleware(['guest'])->group(function () {
     // Admin Registration
@@ -53,17 +54,19 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::put('/update-user/{id}', [UserController::class, 'updateUser'])->name('updateUser');
     Route::delete('/delete-user/{id}', [UserController::class, 'deleteUser'])->name('deleteUser');
 
-    Route::get('/admin/home', [App\Http\Controllers\HomeController::class, 'adminDashboard'])->name('admin.home');
+    Route::get('/admin/home', [HomeController::class, 'adminDashboard'])->name('admin.home');
 
     //api keys
     Route::resource('api-keys', ApiKeyController::class)->only([
-        'index', 'store', 'destroy'
+        'index',
+        'store',
+        'destroy'
     ]);
 
 });
 
 Route::middleware(['auth', 'role:user'])->group(function () {
-    Route::get('/home', [App\Http\Controllers\HomeController::class, 'userDashboard'])->name('user.home');
+    Route::get('/home', [HomeController::class, 'userDashboard'])->name('user.home');
 });
 
 Route::middleware(['auth', 'role:admin|user'])->group(function () {
@@ -71,7 +74,7 @@ Route::middleware(['auth', 'role:admin|user'])->group(function () {
     // Logout
 
     //Language switch
-    Route::get('language/{lang}', [App\Http\Controllers\LanguageController::class, 'switchLang'])->name('language.switch');
+    Route::get('language/{lang}', [LanguageController::class, 'switchLang'])->name('language.switch');
 
     // Profile Management
     Route::get('profile', [ProfileController::class, 'show'])->name('profile.show');

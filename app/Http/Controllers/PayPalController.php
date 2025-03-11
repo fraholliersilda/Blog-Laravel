@@ -2,58 +2,28 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Srmklive\PayPal\Services\PayPal as PayPalClient;
-use Illuminate\Support\Str;
-use App\Models\ApiKey;
-use App\Models\Payment;
-use App\Services\ApiKeyService;
-use Log;
+use App\Http\Requests\PayPalPaymentRequest;
+use App\Services\PayPalService;
+use Illuminate\Support\Facades\Log;
 
 class PayPalController extends Controller
 {
-    protected $provider;
-    protected $apiKeyService;
+    protected $paypalService;
 
-    public function __construct(ApiKeyService $apiKeyService)
+    public function __construct(PayPalService $paypalService)
     {
-        $this->apiKeyService = $apiKeyService;
-        $this->provider = new PayPalClient;
-        $this->provider->setApiCredentials(config('paypal'));
-        $this->provider->getAccessToken();
+        $this->paypalService = $paypalService;
     }
 
-    public function processPayment(Request $request)
+    public function processPayment(PayPalPaymentRequest $request)
     {
-        $request->validate([
-            'plan' => 'required|in:basic,premium',
-            'amount' => 'required|numeric',
-        ]);
-
         $plan = $request->plan;
         $amount = $request->amount;
-
         $returnUrl = route('paypal.success');
         $cancelUrl = route('paypal.cancel');
 
         try {
-            $response = $this->provider->createOrder([
-                'intent' => 'CAPTURE',
-                'application_context' => [
-                    'return_url' => $returnUrl,
-                    'cancel_url' => $cancelUrl,
-                ],
-                'purchase_units' => [
-                    [
-                        'amount' => [
-                            'currency_code' => 'USD',
-                            'value' => $amount,
-                        ],
-                        'description' => 'API Key Purchase - ' . ucfirst($plan) . ' Plan',
-                    ]
-                ]
-            ]);
-
-            Log::info('PayPal Order Response: ' . json_encode($response)); // ADD THIS
+            $response = $this->paypalService->createOrder($plan, $amount, $returnUrl, $cancelUrl);
 
             if (isset($response['id']) && $response['id'] != null) {
                 session([
@@ -68,17 +38,18 @@ class PayPalController extends Controller
                     }
                 }
 
-                return redirect()->route('api-keys.purchase')->with('error', 'Something went wrong with PayPal. Please try again.');
+                toastr()->error('Something went wrong with PayPal. Please try again.');
+                return redirect()->route('api-keys.purchase');
             } else {
                 Log::error('PayPal API error: ' . json_encode($response));
-                return redirect()->route('api-keys.purchase')->with('error', 'PayPal API error. Please try again later.');
+                toastr()->error('PayPal API error. Please try again later.');
+                return redirect()->route('api-keys.purchase');
             }
         } catch (\Exception $e) {
-            Log::error('PayPal process error: ' . $e->getMessage());
-            return redirect()->route('api-keys.purchase')->with('error', 'An error occurred processing your payment. Please try again later.');
+            toastr()->error('An error occurred processing your payment. Please try again later.');
+            return redirect()->route('api-keys.purchase');
         }
     }
-
 
     public function paymentSuccess(Request $request)
     {
@@ -87,55 +58,34 @@ class PayPalController extends Controller
         $amount = session('amount');
 
         if (!$orderId) {
-            return redirect()->route('api-keys.purchase')->with('error', 'Payment information not found.');
+            toastr()->error('Payment information not found.');
+            return redirect()->route('api-keys.purchase');
         }
 
         try {
-            $response = $this->provider->capturePaymentOrder($orderId);
-            Log::info('PayPal Capture Response: ' . json_encode($response));
+            $response = $this->paypalService->capturePayment($orderId);
 
             if (isset($response['status']) && $response['status'] == 'COMPLETED') {
-                $apiKey = $this->generateApiKey($plan, $response);
+                $apiKey = $this->paypalService->generateApiKey($plan, $response, $amount);
 
                 session()->forget(['paypal_order_id', 'plan', 'amount']);
 
+                toastr()->success('Payment completed successfully! Your API key has been generated.');
                 return redirect()->route('api-keys.purchase.success', ['key' => $apiKey->key]);
             } else {
-                Log::error('PayPal capture error: ' . json_encode($response));
-                return redirect()->route('api-keys.purchase')->with('error', 'Payment failed to complete. Please try again.');
+                toastr()->error('Payment failed to complete. Please try again.');
+                return redirect()->route('api-keys.purchase');
             }
         } catch (\Exception $e) {
-            Log::error('PayPal capture error: ' . $e->getMessage());
-            return redirect()->route('api-keys.purchase')->with('error', 'An error occurred finalizing your payment. Please contact support.');
+            toastr()->error('An error occurred finalizing your payment. Please contact support.');
+            return redirect()->route('api-keys.purchase');
         }
     }
-
 
     public function paymentCancel()
     {
         session()->forget(['paypal_order_id', 'plan', 'amount']);
-        return redirect()->route('api-keys.purchase')->with('error', 'Payment was cancelled.');
-    }
-
-    private function generateApiKey($plan, $paymentResponse)
-    {
-        $apiKeyData = [
-            'name' => 'PayPal Purchase - ' . ucfirst($plan) . ' Plan',
-            'plan' => $plan,
-        ];
-
-        $apiKey = $this->apiKeyService->createApiKeyNoUser($apiKeyData);
-
-        $payerEmail = $paymentResponse['payer']['email_address'] ?? null;
-
-        Payment::create([
-            'amount' => session('amount'),
-            'paypal_order_id' => $paymentResponse['id'],
-            'payer_email' => $payerEmail,
-            'api_key_id' => $apiKey->id,
-            'status' => 'completed',
-        ]);
-
-        return $apiKey;
+        toastr()->error('Payment was cancelled.');
+        return redirect()->route('api-keys.purchase');
     }
 }
