@@ -63,7 +63,6 @@
         </div>
     </div>
 
-    <!-- Create API Key Modal -->
     <div class="modal fade" id="createApiKeyModal" tabindex="-1" aria-labelledby="createApiKeyModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">

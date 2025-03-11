@@ -50,8 +50,4 @@ class ApiKey extends Model
         ]);
     }
 
-    public function scopeByEmail($query, $email)
-    {
-        return $query->where('email', $email);
-    }
 }

@@ -24,7 +24,7 @@ class StoreApiKeyRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'expires_at' => 'nullable|date|after:today',
-            'email' => 'required|email',
+            'email' => auth()->check() ? 'nullable' : 'required|email',
         ];
     }
 }

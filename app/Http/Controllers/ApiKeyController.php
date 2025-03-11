@@ -24,7 +24,7 @@ class ApiKeyController extends Controller
             $apiKeys = $this->apiKeyService->getUserApiKeys();
             return view('api-keys.index', compact('apiKeys'));
         } catch (\Exception $e) {
-            Log::error('Error fetching API keys: ' . $e->getMessage());
+            Log::info('Error fetching API keys: ' . $e->getMessage());
             toastr()->error('Failed to load API keys');
             return redirect()->back();
         }
@@ -39,7 +39,7 @@ class ApiKeyController extends Controller
             return redirect()->route('api-keys.index')
                 ->with('generated_key', $apiKey->key);
         } catch (\Exception $e) {
-            Log::error('Error creating API keys: ' . $e->getMessage());
+            Log::info('Error creating API keys: ' . $e->getMessage());
             toastr()->error('Failed to create API keys');
             return redirect()->back();
         }

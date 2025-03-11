@@ -21,7 +21,7 @@ class ApiKeyService{
             'key' => ApiKey::generateKey(),
             'user_id' => Auth::id(),
             'expires_at' => $data['expires_at'] ?? null,
-            'email' => Auth::check() ? Auth::user()->email : $data['email'],
+            'email' => $data['email'] ?? (Auth::check() ? Auth::user()->email : null),
         ]);
     }
 
@@ -48,8 +48,4 @@ class ApiKeyService{
         return $apiKey;
     }
 
-    public function findApiKeysByEmail($email)
-    {
-        return ApiKey::byEmail($email)->get();
-    }
 }

@@ -2,7 +2,6 @@
 
 namespace App\Http\Middleware;
 
-use App;
 use App\Models\ApiKey;
 use Closure;
 use Illuminate\Http\Request;
@@ -29,18 +28,39 @@ class VerifyApiKey
             ], Response::HTTP_FORBIDDEN);
         }
 
-        try {
-            $apiKey->last_used_at = now();
-            $apiKey->save();
+        $email = $request->query('email');
+        if (!$email) {
+            return response()->json([
+                'message' => 'Unauthorized. Email parameter is required.'
+            ], Response::HTTP_FORBIDDEN);
+        }
 
+        if ($apiKey->user_id) {
+            $user = $apiKey->user;
+            if (!$user || $user->email !== $email) {
+                return response()->json([
+                    'message' => 'Unauthorized. Email does not match the authenticated user.'
+                ], Response::HTTP_FORBIDDEN);
+            }
+        }
+        else {
+            if ($apiKey->email !== $email) {
+                return response()->json([
+                    'message' => 'Unauthorized. Email does not match the registered API key.'
+                ], Response::HTTP_FORBIDDEN);
+            }
+        }
+
+        try {
+            $apiKey->markAsUsed();
             Log::info('API key ' . $apiKey->id . ' marked as used at ' . now());
         } catch (\Exception $e) {
             Log::error('Failed to update API key last_used_at: ' . $e->getMessage());
         }
 
-        $request->setUserResolver(function () use ($apiKey) {
-            return $apiKey->user;
-        });
+        if ($apiKey->user_id) {
+            $request->setUserResolver(fn() => $apiKey->user);
+        }
 
         return $next($request);
     }
