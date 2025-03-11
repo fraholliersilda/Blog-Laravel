@@ -48,8 +48,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('users/export', [UserController::class, 'export'])->name('users.export');
 
     Route::get('/users/data', [UserController::class, 'getUsers'])->name('users.data');
-    Route::get('/new-all-users', [UserController::class, 'index'])->name('users.index');
-    Route::get('/all-user', [UserController::class, 'allUser'])->name('alluser');
+    Route::get('/all-users', [UserController::class, 'index'])->name('users.index');
     Route::post('/insert-user', [UserController::class, 'insertUser'])->name('insertUser');
     Route::put('/update-user/{id}', [UserController::class, 'updateUser'])->name('updateUser');
     Route::delete('/delete-user/{id}', [UserController::class, 'deleteUser'])->name('deleteUser');
@@ -62,6 +61,8 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         'store',
         'destroy'
     ]);
+
+    Route::get('api-keys/data', [ApiKeyController::class, 'getApiKeys'])->name('api-keys.data');
 
 });
 

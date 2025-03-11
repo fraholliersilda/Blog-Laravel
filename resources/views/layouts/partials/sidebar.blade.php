@@ -24,12 +24,6 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{ route('alluser') }}" class="nav-link">
-                        <i class="nav-icon bi bi-people"></i>
-                        <p>{{ __('app.all_users') }}</p>
-                    </a>
-                </li>
-                <li class="nav-item">
                     <a href="{{ route('users.index') }}" class="nav-link">
                         <i class="nav-icon bi bi-people"></i>
                         <p>{{ __('app.all_users') }}</p>

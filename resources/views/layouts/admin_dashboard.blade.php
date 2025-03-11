@@ -25,7 +25,7 @@
                         <div class="card p-3 shadow-sm">
                             <p class="mb-2"><span>{{ __('app.want_to_review_users') }} </span>
                                 <br><br>
-                                <a href="{{ route('alluser') }}" class="btn btn-success btn-lg"><i
+                                <a href="{{ route('users.index') }}" class="btn btn-success btn-lg"><i
                                         class="bi bi-pencil-square"></i>{{ __('app.review_users') }}</a>
                             </p>
                         </div>

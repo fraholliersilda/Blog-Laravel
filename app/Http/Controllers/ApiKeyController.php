@@ -30,6 +30,30 @@ class ApiKeyController extends Controller
         }
     }
 
+    public function getApiKeys(){
+        try{
+            $apiKeys = $this->apiKeyService->getUserApiKeys();
+
+        return datatables($apiKeys)
+            ->addColumn('action', function ($key) {
+                return view('api-keys.action', ['key' => $key]);
+            })
+            ->editColumn('created_at', function ($key) {
+                return $key->created_at->format('M d, Y H:i');
+            })
+            ->editColumn('last_used_at', function ($key) {
+                return $key->last_used_at ? $key->last_used_at->format('M d, Y H:i') : 'Never';
+            })
+            ->editColumn('expires_at', function ($key) {
+                return $key->expires_at ? $key->expires_at->format('M d, Y') : 'Never';
+            })
+            ->rawColumns(['action'])
+            ->make(true);
+        }catch (\Throwable $th) {
+            Log::error('Error fetching API keys: ' . $th->getMessage());
+            return response()->json(['error' => 'Failed to retrieve API keys.'], 500);
+        }
+    }
 
     public function store(StoreApiKeyRequest $request)
     {

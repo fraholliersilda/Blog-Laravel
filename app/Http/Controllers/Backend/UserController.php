@@ -23,7 +23,7 @@ class UserController extends Controller
 
     public function index()
     {
-        return view('backend.user.new-all-users');
+        return view('backend.user.all-users');
     }
 
     public function getUsers()
@@ -43,17 +43,6 @@ class UserController extends Controller
     }
 
 
-    public function allUser()
-    {
-        try {
-            $all = $this->userService->getAllNonAdminUsers();
-            return view('backend.user.all-user', compact('all'));
-        } catch (\Throwable $th) {
-            Log::error('Error fetching users: ' . $th->getMessage());
-            return redirect()->back()->with('error', 'Failed to retrieve users.');
-        }
-    }
-
     public function insertUser(NewUserRequest $request)
     {
         try {
@@ -62,7 +51,7 @@ class UserController extends Controller
             Log::info('Request data:', $request->all());
             if ($inserted) {
                 toastr()->success('New user added successfully.');
-                return redirect()->route('alluser');
+                return redirect()->route('users.index');
             } else {
                 toastr()->error('User creation failed');
                 throw new \Exception('User creation failed');
@@ -73,16 +62,6 @@ class UserController extends Controller
         }
     }
 
-    public function editUser($id)
-    {
-        try {
-            $edit = $this->userService->getUserById($id);
-            return view('backend.user.edit_user', compact('edit'));
-        } catch (\Throwable $th) {
-            Log::error('Error fetching user for edit: ' . $th->getMessage());
-            return redirect()->route('alluser')->with('error', 'Failed to retrieve user details.');
-        }
-    }
 
     public function updateUser(UserRequest $request, $id)
     {
@@ -92,7 +71,7 @@ class UserController extends Controller
 
             if ($updated) {
                 toastr()->success('User has been updated successfully!');
-                return redirect()->route('alluser');
+                return redirect()->route('users.index');
             } else {
                 toastr()->error('User update failed');
                 throw new \Exception('User update failed');
@@ -110,10 +89,10 @@ class UserController extends Controller
         try {
             toastr()->success('User deleted successfully');
             $this->userService->deleteUser($id);
-            return redirect()->route('alluser');
+            return redirect()->route('users.index');
         } catch (\Throwable $th) {
             Log::error('User deletion error: ' . $th->getMessage());
-            return redirect()->route('alluser')->with('error', 'Failed to delete user.');
+            return redirect()->route('users.index')->with('error', 'Failed to delete user.');
         }
     }
 
