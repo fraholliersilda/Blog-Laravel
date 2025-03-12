@@ -37,6 +37,106 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Comments Section -->
+                <div class="card shadow-sm mt-4">
+                    <div class="card-body">
+                        <h3 class="card-title mb-4">Comments ({{ $post->comments->whereNull('parent_id')->count() }})</h3>
+
+                        <!-- Add Comment Form -->
+                        <div class="mb-4">
+                            <form action="{{ route('comments.store', $post->id) }}" method="POST">
+                                @csrf
+                                <div class="form-group">
+                                    <textarea name="body" rows="3" class="form-control @error('body') is-invalid @enderror"
+                                        placeholder="Add a comment..."></textarea>
+                                    @error('body')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                                <div class="d-flex justify-content-end mt-2">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="bi bi-send"></i> Post Comment
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Display Comments -->
+                        @forelse($post->comments->whereNull('parent_id') as $comment)
+                            <div class="comment mb-4 p-3 border rounded">
+                                <div class="d-flex justify-content-between">
+                                    <p class="fw-bold mb-1">{{ $comment->user->name ?? 'Anonymous' }}</p>
+                                    <small class="text-muted">{{ $comment->created_at->diffForHumans() }}</small>
+                                </div>
+                                <p class="mb-2">{{ $comment->body }}</p>
+
+                                <div class="d-flex gap-2">
+                                    <button class="btn btn-sm btn-outline-primary reply-btn"
+                                        data-comment-id="{{ $comment->id }}">
+                                        <i class="bi bi-reply"></i> Reply
+                                    </button>
+
+                                    @if(Auth::id() == $comment->user_id || Auth::user()->role_id == 1)
+                                        <form action="{{ route('comments.destroy', $comment->id) }}" method="POST">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-sm btn-danger">
+                                                <i class="bi bi-trash"></i> Delete
+                                            </button>
+                                        </form>
+                                    @endif
+                                </div>
+
+                                <!-- Reply Form (hidden by default) -->
+                                <div class="reply-form mt-3 d-none" id="reply-form-{{ $comment->id }}">
+                                    <form action="{{ route('comments.store', $post->id) }}" method="POST">
+                                        @csrf
+                                        <input type="hidden" name="parent_id" value="{{ $comment->id }}">
+                                        <div class="form-group">
+                                            <textarea name="body" rows="2" class="form-control"
+                                                placeholder="Write your reply..." required></textarea>
+                                        </div>
+                                        <div class="mt-2 d-flex justify-content-end gap-2">
+                                            <button type="button" class="btn btn-sm btn-secondary cancel-reply"
+                                                data-comment-id="{{ $comment->id }}">Cancel</button>
+                                            <button type="submit" class="btn btn-sm btn-primary">Reply</button>
+                                        </div>
+                                    </form>
+                                </div>
+
+                                <!-- Display Replies -->
+                                @if($comment->replies && $comment->replies->count() > 0)
+                                    <div class="replies mt-3 ms-4 border-start ps-3">
+                                        @foreach($comment->replies as $reply)
+                                            <div class="reply p-2 mb-2 bg-light rounded">
+                                                <div class="d-flex justify-content-between">
+                                                    <p class="fw-bold mb-1">{{ $reply->user->name ?? 'Anonymous' }}</p>
+                                                    <small class="text-muted">{{ $reply->created_at->diffForHumans() }}</small>
+                                                </div>
+                                                <p class="mb-2">{{ $reply->body }}</p>
+
+                                                @if(Auth::id() == $reply->user_id || Auth::user()->role_id == 1)
+                                                    <form action="{{ route('comments.destroy', $reply->id) }}" method="POST">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="btn btn-sm btn-danger">
+                                                            <i class="bi bi-trash"></i> Delete
+                                                        </button>
+                                                    </form>
+                                                @endif
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                @endif
+                            </div>
+                        @empty
+                            <div class="alert alert-info">
+                                Be the first to comment on this post!
+                            </div>
+                        @endforelse
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -79,6 +179,24 @@
           });
         });
       };
+
+      // Reply functionality
+      const replyButtons = document.querySelectorAll('.reply-btn');
+      replyButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          const commentId = this.getAttribute('data-comment-id');
+          document.getElementById(`reply-form-${commentId}`).classList.remove('d-none');
+        });
+      });
+
+      // Cancel reply
+      const cancelButtons = document.querySelectorAll('.cancel-reply');
+      cancelButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          const commentId = this.getAttribute('data-comment-id');
+          document.getElementById(`reply-form-${commentId}`).classList.add('d-none');
+        });
+      });
 
       setupDeleteButtons();
 

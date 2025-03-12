@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Authentication\{LoginController, RegisterController, PasswordController};
-use App\Http\Controllers\{HomeController, UserController, ProfileController, LanguageController, ApiKeyController, PayPalController, PostController};
+use App\Http\Controllers\{HomeController, UserController, ProfileController, LanguageController, ApiKeyController, PayPalController, PostController, CommentController};
 
 Route::get('/', function () {
     return view('welcome');
@@ -77,6 +77,10 @@ Route::middleware(['auth', 'role:user'])->group(function () {
     Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
     Route::get('/posts/my-posts', [PostController::class, 'myPosts'])->name('posts.myPosts');
     Route::get('/posts/others', [PostController::class, 'othersPosts'])->name('posts.others');
+
+    //Comments
+    Route::post('posts/{post}/comments', [CommentController::class, 'store'])->name('comments.store');
+    Route::delete('comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
 
 });
 
