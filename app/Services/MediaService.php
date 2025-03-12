@@ -35,26 +35,6 @@ class MediaService
                 'user_id' => $user->id,
             ]);
         });
-        // $user = Auth::user();
-
-        // $this->deleteExistingProfilePicture($user->id);
-
-        // $originalName = $file->getClientOriginalName();
-        // $hashName = $file->hashName();
-        // $path = $file->storeAs('uploads/profile_pictures', $hashName, 'public');
-        // $size = $file->getSize();
-        // $extension = $file->getClientOriginalExtension();
-
-
-        // return Media::create([
-        //     'original_name' => $originalName,
-        //     'hash_name' => $hashName,
-        //     'path' => 'storage/' . $path,
-        //     'size' => $size,
-        //     'extension' => $extension,
-        //     'photo_type' => 'profile_picture',
-        //     'user_id' => $user->id,
-        // ]);
     }
 
     private function deleteExistingProfilePicture(int $userId)

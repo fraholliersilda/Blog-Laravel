@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\backend;
+namespace App\Http\Controllers;
 
 use App\Http\Requests\ImportUsersRequest;
 use App\Http\Requests\NewUserRequest;
@@ -23,7 +23,7 @@ class UserController extends Controller
 
     public function index()
     {
-        return view('backend.user.all-users');
+        return view('admin.users.all-users');
     }
 
     public function getUsers()
@@ -33,7 +33,7 @@ class UserController extends Controller
 
             return datatables($users)
                 ->addColumn('action', function ($user) {
-                    return view('backend.user.action', ['user' => $user]);
+                    return view('admin.users.action', ['user' => $user]);
                 })
                 ->make(true);
         } catch (\Throwable $th) {

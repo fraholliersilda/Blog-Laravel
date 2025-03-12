@@ -29,28 +29,22 @@
                         <div class="d-grid gap-3">
                             <div class="card p-3 shadow-sm">
                                 <p class="mb-2"><span>{{ __('app.want_to_share_your_thoughts') }}</span>
-                                    <br><br> <a href="
-                                    {{-- {{ route('user.addPost') }} --}}
-                                     "
-                                        class="btn btn-success btn-lg"><i class="bi bi-pencil-square"></i> {{ __('app.add_new_post') }}</a>
+                                    <br><br>
+                                    <a href="{{route('posts.create')}}" class="btn btn-success btn-lg"><i class="bi bi-pencil-square"></i> {{ __('app.add_new_post') }}</a>
                                 </p>
                             </div>
 
                             <div class="card p-3 shadow-sm">
-                                <p class="mb-2"><span>{{ __('app.review_and_manage_posts') }}</span> <br> <br> <a
-                                        href="
-                                        {{-- {{ route('myPosts') }} --}}
-                                         "
-                                        class="btn btn-warning btn-lg"><i class="bi bi-eye"></i> {{ __('app.my_posts') }}</a>
+                                <p class="mb-2"><span>{{ __('app.review_and_manage_posts') }}</span>
+                                    <br> <br>
+                                    <a href="{{route('posts.myPosts')}}" class="btn btn-warning btn-lg"><i class="bi bi-eye"></i> {{ __('app.my_posts') }}</a>
                                 </p>
                             </div>
 
                             <div class="card p-3 shadow-sm">
-                                <p class="mb-2"><span>{{ __('app.explore_others_posts') }}</span> <br><br>
-                                    <a href="
-                                    {{-- {{ route('allUserPosts') }} --}}
-                                     "
-                                        class="btn btn-info btn-lg"><i class="bi bi-search"></i> {{ __('app.view_others_posts') }}</a>
+                                <p class="mb-2"><span>{{ __('app.explore_others_posts') }}</span>
+                                    <br><br>
+                                    <a href="{{route('posts.others')}}" class="btn btn-info btn-lg"><i class="bi bi-search"></i> {{ __('app.view_others_posts') }}</a>
                                 </p>
                             </div>
                         </div>

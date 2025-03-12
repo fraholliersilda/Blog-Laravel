@@ -2,7 +2,39 @@
 
 @section('content')
     <div class="container-fluid py-4">
-        <h2 class="mb-4">API Keys</h2>
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <h1 class="display-5 fw-bold text-primary">API Keys Management</h1>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="card border-0 shadow">
+                    <div class="card-header bg-white border-bottom d-flex justify-content-between align-items-center py-3 ">
+                        <h3 class="card-title mb-0 text-primary">All API Keys</h3>
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createApiKeyModal">
+                                Create New API Key
+                            </button>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table id="apiKeysTable" class="table table-striped table-hover">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th class="fw-bold">Name</th>
+                                        <th class="fw-bold">Created</th>
+                                        <th class="fw-bold">Last Used</th>
+                                        <th class="fw-bold">Expires</th>
+                                        <th class="fw-bold text-center">Actions</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         @if (session('success'))
             <div class="alert alert-success" role="alert">
@@ -18,65 +50,42 @@
             </div>
         @endif
 
-        <div class="d-flex justify-content-end mb-3">
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createApiKeyModal">
-                Create New API Key
-            </button>
-        </div>
+        <div class="modal fade" id="createApiKeyModal" tabindex="-1" aria-labelledby="createApiKeyModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header bg-primary text-white">
+                        <h5 class="modal-title" id="createApiKeyModalLabel">Create API Key</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="POST" action="{{ route('api-keys.store') }}" id="createApiKeyForm">
+                            @csrf
 
-        <div class="card shadow-sm">
-            <div class="card-body">
-                <table id="apiKeysTable" class="table table-bordered table-hover">
-                    <thead class="table-light">
-                        <tr>
-                            <th>Name</th>
-                            <th>Created</th>
-                            <th>Last Used</th>
-                            <th>Expires</th>
-                            <th class="text-end">Actions</th>
-                        </tr>
-                    </thead>
-                </table>
-            </div>
-        </div>
-    </div>
+                            <div class="mb-3">
+                                <label for="name" class="form-label">Name</label>
+                                <input type="text" name="name" id="name" value="{{ old('name') }}"
+                                    class="form-control @error('name') is-invalid @enderror" required>
+                                @error('name')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
 
-
-    <div class="modal fade" id="createApiKeyModal" tabindex="-1" aria-labelledby="createApiKeyModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title" id="createApiKeyModalLabel">Create API Key</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
-                        aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form method="POST" action="{{ route('api-keys.store') }}" id="createApiKeyForm">
-                        @csrf
-
-                        <div class="mb-3">
-                            <label for="name" class="form-label">Name</label>
-                            <input type="text" name="name" id="name" value="{{ old('name') }}"
-                                class="form-control @error('name') is-invalid @enderror" required>
-                            @error('name')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="expires_at" class="form-label">Expires At (optional)</label>
-                            <input type="date" name="expires_at" id="expires_at" value="{{ old('expires_at') }}"
-                                class="form-control @error('expires_at') is-invalid @enderror">
-                            @error('expires_at')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" form="createApiKeyForm" class="btn btn-primary">Generate API Key</button>
+                            <div class="mb-3">
+                                <label for="expires_at" class="form-label">Expires At (optional)</label>
+                                <input type="date" name="expires_at" id="expires_at" value="{{ old('expires_at') }}"
+                                    class="form-control @error('expires_at') is-invalid @enderror">
+                                @error('expires_at')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" form="createApiKeyForm" class="btn btn-primary">Generate API Key</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -111,7 +120,7 @@
                         name: 'action',
                         orderable: false,
                         searchable: false,
-                        className: 'text-end'
+                        className: 'text-center'
                     }
                 ]
             });

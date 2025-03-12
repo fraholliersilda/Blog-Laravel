@@ -30,6 +30,12 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a href="{{ route('admin.posts') }}" class="nav-link">
+                        <i class="bi bi-file-earmark-post"></i>
+                        <p>All Posts</p>
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a href="{{ route('api-keys.index') }}" class="nav-link ">
                         <i class="nav-icon bi bi-key"></i>
                         <p>API Keys</p>

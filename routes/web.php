@@ -2,8 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Authentication\{LoginController, RegisterController, PasswordController};
-use App\Http\Controllers\Backend\UserController;
-use App\Http\Controllers\{HomeController, ProfileController, LanguageController, ApiKeyController, PayPalController};
+use App\Http\Controllers\{HomeController, UserController, ProfileController, LanguageController, ApiKeyController, PayPalController, PostController};
 
 Route::get('/', function () {
     return view('welcome');
@@ -64,10 +63,21 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
     Route::get('api-keys/data', [ApiKeyController::class, 'getApiKeys'])->name('api-keys.data');
 
+    //posts
+    Route::get('/admin/posts', [PostController::class, 'adminPosts'])->name('admin.posts');
+    Route::get('/admin/posts/data', [PostController::class, 'getPosts'])->name('admin.posts.data');
+
 });
 
 Route::middleware(['auth', 'role:user'])->group(function () {
     Route::get('/home', [HomeController::class, 'userDashboard'])->name('user.home');
+
+    //Posts
+    Route::get('/posts/create', [PostController::class, 'create'])->name('posts.create');
+    Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
+    Route::get('/posts/my-posts', [PostController::class, 'myPosts'])->name('posts.myPosts');
+    Route::get('/posts/others', [PostController::class, 'othersPosts'])->name('posts.others');
+
 });
 
 Route::middleware(['auth', 'role:admin|user'])->group(function () {
@@ -83,7 +93,11 @@ Route::middleware(['auth', 'role:admin|user'])->group(function () {
     Route::post('profile/password', [ProfileController::class, 'updatePassword'])->name('profile.updatePassword');
     Route::post('profile/update-picture', [ProfileController::class, 'updatePicture'])->name('profile.updatePicture');
     Route::delete('profile', [ProfileController::class, 'delete'])->name('profile.delete');
-
+    //Posts
+    Route::get('/posts/{post}/edit', [PostController::class, 'edit'])->name('posts.edit');
+    Route::put('/posts/{post}', [PostController::class, 'update'])->name('posts.update');
+    Route::delete('/posts/{post}', [PostController::class, 'destroy'])->name('posts.destroy');
+    Route::get('/posts/{post}', [PostController::class, 'show'])->name('posts.show');
     // Logout
     Route::post('admin/logout', [App\Http\Controllers\Authentication\Admin\LoginController::class, 'logout'])->name('logout');
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');

@@ -1,16 +1,15 @@
 <!-- Edit Button -->
 <button type="button" class="btn btn-success btn-sm edit-btn" data-bs-toggle="modal" data-bs-target="#editUserModal"
     data-id="{{ $user->id }}" data-name="{{ $user->name }}" data-email="{{ $user->email }}"
-    data-role="{{ $user->role_id }}">
+    data-role="{{ $user->role_id }}"> <i class="bi bi-pencil-square"></i>
     {{ __('app.edit') }}
 </button>
 
 <!-- Delete Button -->
 <button type="button" class="btn btn-danger btn-sm delete-btn" data-bs-toggle="modal" data-bs-target="#deleteUserModal"
-    data-id="{{ $user->id }}" data-name="{{ $user->name }}">
+    data-id="{{ $user->id }}" data-name="{{ $user->name }}"><i class="bi bi-trash"></i>
     {{ __('app.delete') }}
 </button>
-
 
 
 <!-- Edit User Modal -->

@@ -3,15 +3,19 @@
     <div class="container-fluid">
         <!--begin::Start Navbar Links-->
         <ul class="navbar-nav">
-            <li class="nav-item d-none d-md-block"><a href="{{ route('user.home') }}"
-                    class="nav-link">{{ __('app.dashboard') }}</a></li>
-            {{-- @if (auth()->user()->role->name === 'user')
-                <li class="nav-item d-none d-md-block">
-                    <a href="{{ route('user.addPost') }}" class="nav-link">{{ __('Add Post') }}</a>
-                </li>
-                <a class="nav-link" href="{{ route('myPosts') }}">{{ __('My Blog Posts') }}</a>
-                <a class="nav-link" href="{{ route('allUserPosts') }}">{{ __('Others Blog Posts') }}</a>
-            @endif --}}
+            <li class="nav-item d-none d-md-block">
+                <a href="{{ route('user.home') }}" class="nav-link">{{ __('app.dashboard') }} </a>
+            </li>
+            <li class="nav-item d-none d-md-block">
+                <a href="{{ route('posts.create') }}" class="nav-link">{{ __('Add Post') }}</a>
+            </li>
+            <li>
+                <a class="nav-link" href="{{ route('posts.myPosts') }}">{{ __('My Blog Posts') }}</a>
+            </li>
+            <li>
+                <a class="nav-link" href="{{ route('posts.others') }}">{{ __('Others Blog Posts') }}</a>
+            </li>
+
         </ul>
         <!--end::Start Navbar Links-->
 
@@ -66,6 +70,7 @@
                         <div class="text-center">{{ auth()->user()->name }}</div>
                     </li>
                     <!--end::Menu Body-->
+
                     <!--begin::Menu Footer-->
                     <li class="user-footer">
                         <a href="{{ route('profile.show') }}"

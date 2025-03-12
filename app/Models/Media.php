@@ -16,6 +16,7 @@ class Media extends Model
         'extension',
         'photo_type',
         'user_id',
+        'post_id',
     ];
 
 
@@ -24,4 +25,8 @@ class Media extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function post()
+    {
+        return $this->belongsTo(Post::class);
+    }
 }
