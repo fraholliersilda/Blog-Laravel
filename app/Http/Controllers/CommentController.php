@@ -2,42 +2,52 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CommentRequest;
 use App\Models\Comment;
 use App\Models\Post;
+use App\Services\CommentService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class CommentController extends Controller
 {
-    public function __construct()
+    protected $commentService;
+    public function __construct(CommentService $commentService)
     {
         $this->middleware('auth');
+        $this->commentService = $commentService;
     }
 
-    public function store(Request $request, Post $post)
+    public function store(CommentRequest $request, Post $post)
     {
-        $request->validate([
-            'body' => 'required|string',
-            'parent_id' => 'nullable|exists:comments,id'
-        ]);
+        $comment = $this->commentService->store($request->validated(), $post);
+        toastr()->success('Comment added successfully!');
+        return redirect()->back();
+    }
 
-        $comment = new Comment();
-        $comment->body = $request->body;
-        $comment->user_id = Auth::id();
-        $comment->post_id = $post->id;
-        $comment->parent_id = $request->parent_id;
-        $comment->save();
+    public function update(CommentRequest $request, Comment $comment)
+    {
+        $updated = $this->commentService->update($comment, $request->validated());
 
-        return redirect()->back()->with('success', 'Comment added successfully!');
+        if ($updated) {
+            toastr()->success('Comment updated successfully!');
+            return redirect()->back();
+        }
+
+        toastr()->error('Unauthorized action.');
+        return redirect()->back();
     }
 
     public function destroy(Comment $comment)
     {
-        if (Auth::id() == $comment->user_id || Auth::user()->role_id == 1) {
-            $comment->delete();
-            return redirect()->back()->with('success', 'Comment deleted successfully!');
+        $deleted = $this->commentService->destroy($comment);
+
+        if ($deleted) {
+            toastr()->success('Comment deleted successfully!');
+            return redirect()->back();
         }
 
-        return redirect()->back()->with('error', 'Unauthorized action.');
+        toastr()->error('Unauthorized action.');
+        return redirect()->back();
     }
 }

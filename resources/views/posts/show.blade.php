@@ -9,7 +9,7 @@
                             class="card-img-top img-fluid" style="max-height: 400px; object-fit: cover;">
                     @endif
                     <div class="card-body">
-                        <div class="d-flex justify-content-between ">
+                        <div class="d-flex justify-content-between">
                             <p class="text-muted me-4">By: <em>{{ $post->user->name ?? 'Unknown' }}</em></p>
                             <p class="text-muted">Posted: {{ $post->created_at->format('M d, Y') }}</p>
                         </div>
@@ -41,9 +41,8 @@
                 <!-- Comments Section -->
                 <div class="card shadow-sm mt-4">
                     <div class="card-body">
-                        <h3 class="card-title mb-4">Comments ({{ $post->comments->whereNull('parent_id')->count() }})</h3>
+                        <h3 class="card-title mb-4">Comments ({{ $post->comments->count() }})</h3>
 
-                        <!-- Add Comment Form -->
                         <div class="mb-4">
                             <form action="{{ route('comments.store', $post->id) }}" method="POST">
                                 @csrf
@@ -62,40 +61,63 @@
                             </form>
                         </div>
 
-                        <!-- Display Comments -->
                         @forelse($post->comments->whereNull('parent_id') as $comment)
                             <div class="comment mb-4 p-3 border rounded">
                                 <div class="d-flex justify-content-between">
                                     <p class="fw-bold mb-1">{{ $comment->user->name ?? 'Anonymous' }}</p>
                                     <small class="text-muted">{{ $comment->created_at->diffForHumans() }}</small>
                                 </div>
-                                <p class="mb-2">{{ $comment->body }}</p>
 
-                                <div class="d-flex gap-2">
+                                <div id="comment-body-{{ $comment->id }}">
+                                    <p class="mb-2">{{ $comment->body }}</p>
+                                </div>
+
+                                <div id="comment-edit-form-{{ $comment->id }}" class="d-none">
+                                    <form action="{{ route('comments.update', $comment->id) }}" method="POST">
+                                        @csrf
+                                        @method('PUT')
+                                        <div class="form-group">
+                                            <textarea name="body" rows="2" class="form-control">{{ $comment->body }}</textarea>
+                                        </div>
+                                        <div class="mt-2 d-flex justify-content-end gap-2">
+                                            <button type="button" class="btn btn-sm btn-secondary cancel-edit"
+                                                data-comment-id="{{ $comment->id }}">Cancel</button>
+                                            <button type="submit" class="btn btn-sm btn-success">Save</button>
+                                        </div>
+                                    </form>
+                                </div>
+
+                                <div class="d-flex gap-2 mt-2">
                                     <button class="btn btn-sm btn-outline-primary reply-btn"
                                         data-comment-id="{{ $comment->id }}">
                                         <i class="bi bi-reply"></i> Reply
                                     </button>
 
-                                    @if(Auth::id() == $comment->user_id || Auth::user()->role_id == 1)
-                                        <form action="{{ route('comments.destroy', $comment->id) }}" method="POST">
+                                    @if (Auth::id() == $comment->user_id)
+                                        <button class="btn btn-sm btn-outline-success edit-comment-btn"
+                                            data-comment-id="{{ $comment->id }}">
+                                            <i class="bi bi-pencil"></i> Edit
+                                        </button>
+                                    @endif
+
+                                    @if (Auth::id() == $comment->user_id || Auth::user()->role_id == 1)
+                                        <form action="{{ route('comments.destroy', $comment->id) }}" method="POST"
+                                            class="d-inline">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-sm btn-danger">
+                                            <button type="submit" class="btn btn-sm btn-outline-danger">
                                                 <i class="bi bi-trash"></i> Delete
                                             </button>
                                         </form>
                                     @endif
                                 </div>
 
-                                <!-- Reply Form (hidden by default) -->
                                 <div class="reply-form mt-3 d-none" id="reply-form-{{ $comment->id }}">
                                     <form action="{{ route('comments.store', $post->id) }}" method="POST">
                                         @csrf
                                         <input type="hidden" name="parent_id" value="{{ $comment->id }}">
                                         <div class="form-group">
-                                            <textarea name="body" rows="2" class="form-control"
-                                                placeholder="Write your reply..." required></textarea>
+                                            <textarea name="body" rows="2" class="form-control" placeholder="Write your reply..." required></textarea>
                                         </div>
                                         <div class="mt-2 d-flex justify-content-end gap-2">
                                             <button type="button" class="btn btn-sm btn-secondary cancel-reply"
@@ -105,26 +127,84 @@
                                     </form>
                                 </div>
 
-                                <!-- Display Replies -->
-                                @if($comment->replies && $comment->replies->count() > 0)
+                                @if ($comment->replies && $comment->replies->count() > 0)
                                     <div class="replies mt-3 ms-4 border-start ps-3">
-                                        @foreach($comment->replies as $reply)
+                                        @foreach ($comment->replies as $reply)
                                             <div class="reply p-2 mb-2 bg-light rounded">
                                                 <div class="d-flex justify-content-between">
                                                     <p class="fw-bold mb-1">{{ $reply->user->name ?? 'Anonymous' }}</p>
-                                                    <small class="text-muted">{{ $reply->created_at->diffForHumans() }}</small>
+                                                    <small
+                                                        class="text-muted">{{ $reply->created_at->diffForHumans() }}</small>
                                                 </div>
-                                                <p class="mb-2">{{ $reply->body }}</p>
 
-                                                @if(Auth::id() == $reply->user_id || Auth::user()->role_id == 1)
-                                                    <form action="{{ route('comments.destroy', $reply->id) }}" method="POST">
+                                                <div id="comment-body-{{ $reply->id }}">
+                                                    <p class="mb-2">{{ $reply->body }}</p>
+                                                </div>
+
+                                                <div id="comment-edit-form-{{ $reply->id }}" class="d-none">
+                                                    <form action="{{ route('comments.update', $reply->id) }}"
+                                                        method="POST">
                                                         @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit" class="btn btn-sm btn-danger">
-                                                            <i class="bi bi-trash"></i> Delete
-                                                        </button>
+                                                        @method('PUT')
+                                                        <div class="form-group">
+                                                            <textarea name="body" rows="2" class="form-control">{{ $reply->body }}</textarea>
+                                                        </div>
+                                                        <div class="mt-2 d-flex justify-content-end gap-2">
+                                                            <button type="button"
+                                                                class="btn btn-sm btn-secondary cancel-edit"
+                                                                data-comment-id="{{ $reply->id }}">Cancel</button>
+                                                            <button type="submit"
+                                                                class="btn btn-sm btn-success">Save</button>
+                                                        </div>
                                                     </form>
-                                                @endif
+                                                </div>
+
+                                                <div class="d-flex gap-2 mt-2">
+                                                    <button class="btn btn-sm btn-outline-primary reply-to-reply-btn"
+                                                        data-parent-id="{{ $comment->id }}"
+                                                        data-reply-id="{{ $reply->id }}">
+                                                        <i class="bi bi-reply"></i> Reply
+                                                    </button>
+
+                                                    @if (Auth::id() == $reply->user_id)
+                                                        <button class="btn btn-sm btn-outline-success edit-comment-btn"
+                                                            data-comment-id="{{ $reply->id }}">
+                                                            <i class="bi bi-pencil"></i> Edit
+                                                        </button>
+                                                    @endif
+
+                                                    @if (Auth::id() == $reply->user_id || Auth::user()->role_id == 1)
+                                                        <form action="{{ route('comments.destroy', $reply->id) }}"
+                                                            method="POST" class="d-inline">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                                <i class="bi bi-trash"></i> Delete
+                                                            </button>
+                                                        </form>
+                                                    @endif
+                                                </div>
+
+                                                <div class="reply-to-reply-form mt-2 d-none"
+                                                    id="reply-to-reply-form-{{ $reply->id }}">
+                                                    <form action="{{ route('comments.store', $post->id) }}"
+                                                        method="POST">
+                                                        @csrf
+                                                        <input type="hidden" name="parent_id"
+                                                            value="{{ $comment->id }}">
+                                                        <div class="form-group">
+                                                            <textarea name="body" rows="2" class="form-control"
+                                                                placeholder="Write your reply to {{ $reply->user->name }}..." required></textarea>
+                                                        </div>
+                                                        <div class="mt-2 d-flex justify-content-end gap-2">
+                                                            <button type="button"
+                                                                class="btn btn-sm btn-secondary cancel-reply-to-reply"
+                                                                data-reply-id="{{ $reply->id }}">Cancel</button>
+                                                            <button type="submit"
+                                                                class="btn btn-sm btn-primary">Reply</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
                                             </div>
                                         @endforeach
                                     </div>
@@ -142,68 +222,106 @@
     </div>
 @endsection
 
-<div class="modal fade" id="deletePostModal" tabindex="-1" aria-labelledby="deletePostModalLabel" aria-hidden="true">
+<div class="modal fade" id="deletePostModal" tabindex="-1" aria-labelledby="deletePostModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header bg-danger text-white">
-          <h5 class="modal-title" id="deletePostModalLabel">Confirm Deletion</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="deletePostModalLabel">Confirm Deletion</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete this post? This action cannot be undone.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form id="deletePostForm" action="" method="POST">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </div>
         </div>
-        <div class="modal-body">
-          <p>Are you sure you want to delete this post? This action cannot be undone.</p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-          <form id="deletePostForm" action="" method="POST">
-            @csrf
-            @method('DELETE')
-            <button type="submit" class="btn btn-danger">Delete</button>
-          </form>
-        </div>
-      </div>
     </div>
-  </div>
+</div>
 
-  <script>
+<script>
     document.addEventListener('DOMContentLoaded', function() {
-      const setupDeleteButtons = () => {
-        const deleteButtons = document.querySelectorAll('.delete-post-btn');
-        deleteButtons.forEach(button => {
-          button.addEventListener('click', function(e) {
-            e.preventDefault();
-            const postId = this.getAttribute('data-post-id');
-            const deleteForm = document.getElementById('deletePostForm');
-            deleteForm.action = `/posts/${postId}`;
-            const deleteModal = new bootstrap.Modal(document.getElementById('deletePostModal'));
-            deleteModal.show();
-          });
-        });
-      };
+        const setupDeleteButtons = () => {
+            const deleteButtons = document.querySelectorAll('.delete-post-btn');
+            deleteButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const postId = this.getAttribute('data-post-id');
+                    const deleteForm = document.getElementById('deletePostForm');
+                    deleteForm.action = `/posts/${postId}`;
+                    const deleteModal = new bootstrap.Modal(document.getElementById(
+                        'deletePostModal'));
+                    deleteModal.show();
+                });
+            });
+        };
 
-      // Reply functionality
-      const replyButtons = document.querySelectorAll('.reply-btn');
-      replyButtons.forEach(button => {
-        button.addEventListener('click', function() {
-          const commentId = this.getAttribute('data-comment-id');
-          document.getElementById(`reply-form-${commentId}`).classList.remove('d-none');
+        const replyButtons = document.querySelectorAll('.reply-btn');
+        replyButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const commentId = this.getAttribute('data-comment-id');
+                document.getElementById(`reply-form-${commentId}`).classList.remove('d-none');
+            });
         });
-      });
 
-      // Cancel reply
-      const cancelButtons = document.querySelectorAll('.cancel-reply');
-      cancelButtons.forEach(button => {
-        button.addEventListener('click', function() {
-          const commentId = this.getAttribute('data-comment-id');
-          document.getElementById(`reply-form-${commentId}`).classList.add('d-none');
+        const cancelButtons = document.querySelectorAll('.cancel-reply');
+        cancelButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const commentId = this.getAttribute('data-comment-id');
+                document.getElementById(`reply-form-${commentId}`).classList.add('d-none');
+            });
         });
-      });
 
-      setupDeleteButtons();
-
-      if (typeof $.fn.dataTable !== 'undefined') {
-        $('#posts-table').on('draw.dt', function() {
-          setupDeleteButtons();
+        const replyToReplyButtons = document.querySelectorAll('.reply-to-reply-btn');
+        replyToReplyButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const replyId = this.getAttribute('data-reply-id');
+                document.getElementById(`reply-to-reply-form-${replyId}`).classList.remove(
+                    'd-none');
+            });
         });
-      }
+
+        const cancelReplyToReplyButtons = document.querySelectorAll('.cancel-reply-to-reply');
+        cancelReplyToReplyButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const replyId = this.getAttribute('data-reply-id');
+                document.getElementById(`reply-to-reply-form-${replyId}`).classList.add(
+                    'd-none');
+            });
+        });
+
+        const editButtons = document.querySelectorAll('.edit-comment-btn');
+        editButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const commentId = this.getAttribute('data-comment-id');
+                document.getElementById(`comment-body-${commentId}`).classList.add('d-none');
+                document.getElementById(`comment-edit-form-${commentId}`).classList.remove(
+                    'd-none');
+            });
+        });
+
+        const cancelEditButtons = document.querySelectorAll('.cancel-edit');
+        cancelEditButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const commentId = this.getAttribute('data-comment-id');
+                document.getElementById(`comment-body-${commentId}`).classList.remove('d-none');
+                document.getElementById(`comment-edit-form-${commentId}`).classList.add(
+                    'd-none');
+            });
+        });
+
+        setupDeleteButtons();
+
+        if (typeof $.fn.dataTable !== 'undefined') {
+            $('#posts-table').on('draw.dt', function() {
+                setupDeleteButtons();
+            });
+        }
     });
-  </script>
+</script>

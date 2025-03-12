@@ -80,6 +80,7 @@ Route::middleware(['auth', 'role:user'])->group(function () {
 
     //Comments
     Route::post('posts/{post}/comments', [CommentController::class, 'store'])->name('comments.store');
+    Route::put('/comments/{comment}', [App\Http\Controllers\CommentController::class, 'update'])->name('comments.update');
     Route::delete('comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
 
 });
