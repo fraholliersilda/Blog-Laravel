@@ -18,12 +18,9 @@
                                 <div class="d-flex gap-2">
                                     <a href="{{ route('posts.edit', $post->id) }}" class="btn btn-sm btn-success flex-grow-1"><i
                                             class="bi bi-pencil-square"></i> Edit</a>
-                                    <form action="{{ route('posts.destroy', $post->id) }}" method="POST" class="flex-grow-1">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-sm btn-danger w-100"><i class="bi bi-trash"></i>
-                                            Delete</button>
-                                    </form>
+                                    <button class="btn btn-sm btn-danger flex-grow-1 delete-post-btn" data-post-id="{{ $post->id }}">
+                                        <i class="bi bi-trash"></i> Delete
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -33,3 +30,52 @@
         </div>
     </div>
 @endsection
+
+
+<div class="modal fade" id="deletePostModal" tabindex="-1" aria-labelledby="deletePostModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header bg-danger text-white">
+          <h5 class="modal-title" id="deletePostModalLabel">Confirm Deletion</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>Are you sure you want to delete this post? This action cannot be undone.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <form id="deletePostForm" action="" method="POST">
+            @csrf
+            @method('DELETE')
+            <button type="submit" class="btn btn-danger">Delete</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const setupDeleteButtons = () => {
+        const deleteButtons = document.querySelectorAll('.delete-post-btn');
+        deleteButtons.forEach(button => {
+          button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const postId = this.getAttribute('data-post-id');
+            const deleteForm = document.getElementById('deletePostForm');
+            deleteForm.action = `/posts/${postId}`;
+            const deleteModal = new bootstrap.Modal(document.getElementById('deletePostModal'));
+            deleteModal.show();
+          });
+        });
+      };
+
+      setupDeleteButtons();
+
+      if (typeof $.fn.dataTable !== 'undefined') {
+        $('#posts-table').on('draw.dt', function() {
+          setupDeleteButtons();
+        });
+      }
+    });
+  </script>

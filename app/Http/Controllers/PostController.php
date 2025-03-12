@@ -60,12 +60,8 @@ class PostController extends Controller
         try {
             $this->postService->updatePost($request->validated(), $post);
 
-            if (Auth::user()->role_id == 1) {
-                toastr()->success('Post updated successfully.');
-                return redirect()->route('admin.posts');
-            }
             toastr()->success('Post updated successfully.');
-            return redirect()->route('posts.myPosts');
+            return redirect()->back();
         } catch (\Exception $e) {
             Log::error('Error updating post: ' . $e->getMessage());
             toastr()->error('Failed to update post.');
@@ -77,14 +73,8 @@ class PostController extends Controller
     {
         try {
             $this->postService->deletePost($post);
-
-            if (Auth::user()->role_id == 1) {
-                toastr()->success('Post deleted successfully.');
-                return redirect()->route('admin.posts');
-            }
-
             toastr()->success('Post deleted successfully.');
-            return redirect()->route('posts.myPosts');
+            return redirect()->back();
         } catch (\Exception $e) {
             Log::error('Error deleting post: ' . $e->getMessage());
             toastr()->error('Failed to delete post.');
@@ -100,7 +90,7 @@ class PostController extends Controller
     public function getPosts()
     {
         try {
-            $posts = Post::with('user')->select('posts.*');
+            $posts = Post::with('user', 'media')->select('posts.*');
 
             return DataTables::of($posts)
                 ->addColumn('cover_photo', function ($post) {
