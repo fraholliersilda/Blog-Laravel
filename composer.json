@@ -15,7 +15,8 @@
         "realrashid/sweet-alert": "^7.3",
         "srmklive/paypal": "~3.0",
         "yajra/laravel-datatables": "^11.0",
-        "yajra/laravel-datatables-oracle": "*"
+        "yajra/laravel-datatables-oracle": "*",
+        "yoeunes/toastr": "^3.1"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.15",

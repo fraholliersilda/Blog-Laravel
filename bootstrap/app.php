@@ -23,6 +23,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'role' => \App\Http\Middleware\RoleMiddleware::class,
             'locale' => \App\Http\Middleware\LocaleMiddleware::class,
             'api.key' => \App\Http\Middleware\VerifyApiKey::class,
+            'emailBelongsToAdmin' => \App\Http\Middleware\EmailBelongsToAdmin::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
