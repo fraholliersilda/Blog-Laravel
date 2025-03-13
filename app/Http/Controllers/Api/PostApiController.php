@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\PostRequest;
 use App\Http\Resources\PostResource;
 use App\Models\Post;
+use App\Models\User;
 use App\Services\PostService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -87,6 +88,7 @@ class PostApiController extends Controller
     {
         try {
             $post = Post::findOrFail($id);
+            $user = User::where('email', $request->input('email'))->first();
 
             if ($post->user_id !== Auth::id() && Auth::user()->role_id !== 1) {
                 return response()->json([
@@ -113,11 +115,12 @@ class PostApiController extends Controller
         try {
             $post = Post::findOrFail($id);
 
-            if ($post->user_id !== Auth::id() && Auth::user()->role_id !== 1) {
+            if (!Auth::check() || ($post->user_id !== Auth::id() && Auth::user()->role_id !== 1)) {
                 return response()->json([
                     'message' => 'Unauthorized to delete this post'
                 ], Response::HTTP_FORBIDDEN);
             }
+
 
             $this->postService->deletePost($post);
             return response()->json([

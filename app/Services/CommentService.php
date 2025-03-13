@@ -32,7 +32,11 @@ class CommentService
 
     public function destroy(Comment $comment)
     {
-        if (Auth::id() == $comment->user_id) {
+        foreach ($comment->replies as $reply) {
+            $this->destroy($reply);
+        }
+
+        if (Auth::id() == $comment->user_id || Auth::user()->role_id == 1) {
             $comment->delete();
             return true;
         }
