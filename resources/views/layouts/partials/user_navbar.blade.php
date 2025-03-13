@@ -58,7 +58,7 @@
             <li class="nav-item dropdown user-menu">
                 <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
                     @php
-                        $profilePicture = auth()->user()->media()->where('photo_type', 'profile_picture')->first();
+                        $profilePicture = auth()->user()->profilePicture;
                     @endphp
 
                     <img src="{{ $profilePicture ? asset($profilePicture->path) : asset('storage/uploads/profile_pictures/default_profile.jpg') }}"

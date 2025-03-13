@@ -43,4 +43,13 @@ class CommentService
 
         return false;
     }
+
+
+    public function getCommentsForPost(Post $post)
+    {
+        return Comment::with(['user', 'replies.user', 'parent'])
+            ->where('post_id', $post->id)
+            ->whereNull('parent_id')
+            ->get();
+    }
 }

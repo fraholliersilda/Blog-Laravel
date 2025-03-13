@@ -1,14 +1,35 @@
 <div class="comment mb-3 p-2 border rounded {{ $isReply ? 'bg-light ms-3' : '' }}">
     <div class="d-flex justify-content-between align-items-center">
-        <p class="fw-bold mb-0">{{ $comment->user->name ?? 'Anonymous' }}</p>
+        <div class="d-flex align-items-center">
+            <div class="me-2">
+                @php
+                    $profilePicture = $comment->user?->profilePicture?->path ?? null;
+                @endphp
+
+                @if ($profilePicture)
+                    <img src="{{ asset($profilePicture) }}"
+                        alt="{{ $comment->user->name ?? 'Anonymous' }}"
+                        class="rounded-circle"
+                        style="width: 32px; height: 32px; object-fit: cover;">
+                @else
+                    <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center text-white"
+                        style="width: 32px; height: 32px;">
+                        {{ $comment->user?->name ? substr($comment->user->name, 0, 1) : 'A' }}
+                    </div>
+                @endif
+            </div>
+            <p class="fw-bold mb-0">{{ $comment->user->name ?? 'Anonymous' }}</p>
+        </div>
         <small class="text-muted">{{ $comment->created_at->diffForHumans() }}</small>
     </div>
 
-    <div id="comment-body-{{ $comment->id }}">
-        <p class="mb-1 mt-1">{{ $comment->body }}</p>
+    <!-- Comment Body -->
+    <div id="comment-body-{{ $comment->id }}" class="ms-4 mt-1">
+        <p class="mb-1">{{ $comment->body }}</p>
     </div>
 
-    <div id="comment-edit-form-{{ $comment->id }}" class="d-none">
+    <!-- Edit Form -->
+    <div id="comment-edit-form-{{ $comment->id }}" class="d-none ms-4">
         <form action="{{ route('comments.update', $comment->id) }}" method="POST">
             @csrf
             @method('PUT')
@@ -23,7 +44,8 @@
         </form>
     </div>
 
-    <div class="d-flex gap-2 mt-1">
+    <!-- Action Buttons -->
+    <div class="d-flex gap-2 mt-1 ms-4">
         <button class="btn btn-sm btn-outline-primary reply-btn" data-comment-id="{{ $comment->id }}">
             <i class="bi bi-reply"></i> Reply
         </button>
@@ -35,7 +57,7 @@
         @endif
 
         @if (Auth::id() == $comment->user_id || Auth::user()->role_id == 1)
-            <form action="{{ route('comments.destroy', $comment->id) }}" method="POST" class="d-inline" style="margin-block-end: 0px;">
+            <form action="{{ route('comments.destroy', $comment->id) }}" method="POST" class="d-inline">
                 @csrf
                 @method('DELETE')
                 <button type="submit" class="btn btn-sm btn-outline-danger">
@@ -45,8 +67,9 @@
         @endif
     </div>
 
-    <div class="reply-form mt-2 d-none" id="reply-form-{{ $comment->id }}">
-        <form action="{{ route('comments.store', $comment->post_id) }}" method="POST">
+    <!-- Reply Form -->
+    <div class="reply-form mt-2 ms-4 d-none" id="reply-form-{{ $comment->id }}">
+        <form action="{{ route('comments.store', ['post' => $comment->post_id]) }}" method="POST">
             @csrf
             <input type="hidden" name="parent_id" value="{{ $comment->id }}">
             <div class="form-group">
@@ -60,8 +83,8 @@
         </form>
     </div>
 
-    <!-- Replies -->
-    @if ($comment->replies && $comment->replies->count() > 0)
+    <!-- Replies Section -->
+    @if ($comment->replies->isNotEmpty())
         <div class="replies mt-2 border-start ps-2">
             @foreach ($comment->replies as $reply)
                 @include('partials._comment', ['comment' => $reply, 'isReply' => true])

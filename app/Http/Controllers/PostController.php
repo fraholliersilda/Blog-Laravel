@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\PostRequest;
 use App\Models\Post;
+use App\Services\CommentService;
 use App\Services\PostService;
 use Illuminate\Support\Facades\Auth;
 use Log;
@@ -11,10 +12,12 @@ use Yajra\DataTables\DataTables;
 class PostController extends Controller
 {
     protected $postService;
+    protected $commentService;
 
-    public function __construct(PostService $postService)
+    public function __construct(PostService $postService, CommentService $commentService)
     {
         $this->postService = $postService;
+        $this->commentService= $commentService;
     }
 
     public function create()
@@ -106,8 +109,10 @@ class PostController extends Controller
         }
     }
 
-    public function show(Post $post)
+    public function show(Post $post, CommentService $commentService)
     {
-        return view('posts.show', compact('post'));
+        $comments = $commentService->getCommentsForPost($post);
+        return view('posts.show', compact('post', 'comments'));
     }
+
 }

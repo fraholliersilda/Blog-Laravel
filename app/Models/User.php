@@ -68,15 +68,10 @@ class User extends Authenticatable
         return in_array($this->role?->name, $roles, true);
     }
 
-    public function media()
+    public function profilePicture()
     {
-        return $this->hasMany(Media::class, 'user_id');
+        return $this->hasOne(Media::class)->whereNull('post_id');
     }
-
-    // public function posts()
-    // {
-    //     return $this->hasManyThrough(Post::class, Media::class, 'user_id', 'id', 'id', 'post_id');
-    // }
 
     public function isAdmin()
     {

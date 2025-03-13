@@ -47,14 +47,31 @@
                             <div class="mb-3">
                                 <form action="{{ route('comments.store', $post->id) }}" method="POST">
                                     @csrf
-                                    <div class="form-group">
-                                        <textarea name="body" rows="3" class="form-control @error('body') is-invalid @enderror"
-                                            placeholder="Add a comment..."></textarea>
-                                    </div>
-                                    <div class="d-flex justify-content-end mt-2">
-                                        <button type="submit" class="btn btn-primary">
-                                            <i class="bi bi-send"></i> Post Comment
-                                        </button>
+                                    <div class="d-flex gap-2">
+                                        <div>
+                                            @if(Auth::user()->profilePicture)
+                                                <img src="{{ asset('storage/' . Auth::user()->profilePicture->path) }}"
+                                                     alt="{{ Auth::user()->name }}"
+                                                     class="rounded-circle"
+                                                     style="width: 40px; height: 40px; object-fit: cover;">
+                                            @else
+                                                <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center text-white"
+                                                     style="width: 40px; height: 40px;">
+                                                    {{ substr(Auth::user()->name, 0, 1) }}
+                                                </div>
+                                            @endif
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <div class="form-group">
+                                                <textarea name="body" rows="2" class="form-control @error('body') is-invalid @enderror"
+                                                    placeholder="Add a comment..."></textarea>
+                                            </div>
+                                            <div class="d-flex justify-content-end mt-2">
+                                                <button type="submit" class="btn btn-primary">
+                                                    <i class="bi bi-send"></i> Post Comment
+                                                </button>
+                                            </div>
+                                        </div>
                                     </div>
                                 </form>
                             </div>
